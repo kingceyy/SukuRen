@@ -1,4 +1,4 @@
-mfrom pyrogram import Client, filters
+from pyrogram import Client, filters
 from pyrogram.enums import MessageMediaType, ChatAction
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
