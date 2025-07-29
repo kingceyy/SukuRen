@@ -10,7 +10,7 @@ from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, CallbackQuery
 
-from helper.database import digital_botz
+from helper.database import zeexdev
 from config import Config, rkn
 from helper.utils import humanbytes
 from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__
