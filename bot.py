@@ -93,7 +93,7 @@ class DigitalRenameBot(Client):
         await super().stop()
         
 
-bot_instance = ZeeXRenameBot()
+bot_instance = DigitalRenameBot()
 
 def main():
     async def start_services():
