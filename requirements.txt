@@ -10,4 +10,3 @@ Pillow==10.3.0
 ffmpeg-python==0.2.0
 ffmpeg==1.4
 aiohttp==3.9.5
-pymongo==3.13.0
