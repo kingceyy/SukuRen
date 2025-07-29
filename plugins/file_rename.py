@@ -67,7 +67,7 @@ async def rename_start(client, message):
     except:
         pass
 
-@Client.on_message(filters.private & filters.reply))
+@Client.on_message(filters.private & filters.reply)
 async def refunc(client, message):
     await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     reply_message = message.reply_to_message
