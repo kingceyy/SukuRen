@@ -1,37 +1,13 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To (https://github.com/JayMahakal98) & @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# (c) @RknDeveloperr — modifié pour SukunaRenamer
 
 """
 Apache License 2.0
 Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
 """
 
 # extra imports
-import math, time, re, datetime, pytz, os
+import math, time, re, datetime, pytz, os, hashlib, hmac, json
+from urllib.parse import parse_qsl
 from config import Config, rkn 
 
 # pyrogram imports
@@ -64,7 +40,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         try:
             await message.edit(
                 text=f"{ud_type}\n\n{tmp}",               
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("✖️ 𝙲𝙰𝙽𝙲𝙴𝙻 ✖️", callback_data="close")]])                                               
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("✖️ 𝙰𝙽𝙽𝚄𝙻𝙴𝚁 ✖️", callback_data="close")]])                                               
             )
         except:
             pass
@@ -103,12 +79,12 @@ def convert(seconds):
 
 async def send_log(b, u):
     if Config.LOG_CHANNEL is not None:
-        curr = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
+        curr = datetime.datetime.now(pytz.timezone("Africa/Lome"))
         date = curr.strftime('%d %B, %Y')
-        time = curr.strftime('%I:%M:%S %p')
+        time_ = curr.strftime('%I:%M:%S %p')
         await b.send_message(
             Config.LOG_CHANNEL,
-            f"**--Nᴇᴡ Uꜱᴇʀ Sᴛᴀʀᴛᴇᴅ Tʜᴇ Bᴏᴛ--**\n\nUꜱᴇʀ: {u.mention}\nIᴅ: `{u.id}`\nUɴ: @{u.username}\n\nDᴀᴛᴇ: {date}\nTɪᴍᴇ: {time}\n\nBy: {b.mention}"
+            f"**--Nᴏᴜᴠᴇᴀᴜ Vᴀɪssᴇᴀᴜ--**\n\nUtilisateur: {u.mention}\nId: `{u.id}`\nUn: @{u.username}\n\nDate: {date}\nHeure: {time_}\n\nPar: {b.mention}"
         )
 
 async def get_seconds(time_string):
@@ -168,10 +144,51 @@ async def remove_path(ph_path, file_path, dl_path, metadata_path):
     if os.path.lexists(metadata_path):
         os.remove(metadata_path)
 
-# (c) @RknDeveloperr
+
+# ===================== VÉRIFICATION TELEGRAM WEBAPP INIT DATA =====================
+# Doc officielle : https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+# Empêche quiconque de forger une requête vers l'API de récompense sans avoir réellement
+# ouvert la Mini App depuis un compte Telegram valide.
+
+def verify_telegram_init_data(init_data: str, bot_token: str, max_age_seconds: int = 86400):
+    """Retourne {"user": {...}, "auth_date": int, "raw": {...}} si valide, sinon None."""
+    if not init_data or not bot_token:
+        return None
+    try:
+        parsed = dict(parse_qsl(init_data, strict_parsing=True))
+    except Exception:
+        return None
+
+    received_hash = parsed.pop('hash', None)
+    if not received_hash:
+        return None
+
+    data_check_string = "\n".join(f"{k}={v}" for k, v in sorted(parsed.items()))
+    secret_key = hmac.new(b"WebAppData", bot_token.encode(), hashlib.sha256).digest()
+    computed_hash = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
+
+    if not hmac.compare_digest(computed_hash, received_hash):
+        return None
+
+    try:
+        auth_date = int(parsed.get('auth_date', 0))
+    except ValueError:
+        return None
+
+    if max_age_seconds and (time.time() - auth_date) > max_age_seconds:
+        return None
+
+    user = None
+    if parsed.get('user'):
+        try:
+            user = json.loads(parsed['user'])
+        except Exception:
+            return None
+
+    if not user or not user.get('id'):
+        return None
+
+    return {"user": user, "auth_date": auth_date, "raw": parsed}
+
 # Rkn Developer 
 # Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support

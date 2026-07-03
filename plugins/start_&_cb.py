@@ -8,7 +8,7 @@ import shutil
 
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, CallbackQuery
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, CallbackQuery, WebAppInfo
 
 from helper.database import zeexdev
 from config import Config, rkn
@@ -16,33 +16,39 @@ from helper.utils import humanbytes
 from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__
 
 upgrade_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('acheter premium ✓', user_id=int(6705898491)),
+        InlineKeyboardButton('👑 Négocier avec l\'admin', user_id=int(6705898491)),
          ],[
+        InlineKeyboardButton("⚡ Obtenir des quotas gratuits", web_app=WebAppInfo(url=Config.WEBAPP_URL))
+        ],[
         InlineKeyboardButton("Retour", callback_data = "start")
 ]])
 
 upgrade_trial_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('acheter premium ✓', user_id=int(6705898491)),
+        InlineKeyboardButton('👑 Négocier avec l\'admin', user_id=int(6705898491)),
          ],[
-        InlineKeyboardButton("essai - 12 heures ✓", callback_data = "give_trial"),
+        InlineKeyboardButton("essai premium - 12 heures ✓", callback_data = "give_trial"),
+        ],[
+        InlineKeyboardButton("⚡ Obtenir des quotas gratuits", web_app=WebAppInfo(url=Config.WEBAPP_URL))
+        ],[
         InlineKeyboardButton("Retour", callback_data = "start")
 ]])
 
 start_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('Mises à jour', url='https://t.me/ZeeXDev'),
-        InlineKeyboardButton('Support', url='https://t.me/BTZF_CHAT')
+        InlineKeyboardButton('Mises à jour', url='https://t.me/itz_kingcey'),
+        InlineKeyboardButton('Support', url='https://t.me/https://t.me/+u5qxRjapSF05YTBk')
         ],[
         InlineKeyboardButton('À propos', callback_data='about'),
         InlineKeyboardButton('Aide', callback_data='help')
         ],[
-        InlineKeyboardButton('💸 passer à premium 💸', callback_data='upgrade')
+        InlineKeyboardButton('⚡ Mes quotas', callback_data='mesquotas'),
+        InlineKeyboardButton('👑 Premium', callback_data='upgrade')
          ]])
         
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client, message):
     user = message.from_user
     await client.send_chat_action(message.chat.id, ChatAction.TYPING)
-    await digital_botz.add_user(client, message) 
+    await zeexdev.add_user(client, message) 
     if Config.RKN_PIC:
         await message.reply_photo(Config.RKN_PIC, caption=rkn.START_TXT.format(user.mention), reply_markup=start_button)       
     else:
@@ -52,42 +58,53 @@ async def start(client, message):
 async def myplan(client, message):
     user_id = message.from_user.id
     await client.send_chat_action(message.chat.id, ChatAction.TYPING)
-    user = message.from_user.mention        
-    await digital_botz.reset_uploadlimit_access(user_id)        
-    if await digital_botz.has_premium_access(user_id):
-        user_data = await digital_botz.get_user_data(user_id)
-        limit = user_data.get('uploadlimit', 0)
-        used = user_data.get('used_limit', 0)
-        remain = int(limit)- int(used)
-        type = user_data.get('usertype', "Gratuit")
-            
-        data = await digital_botz.get_user(user_id)
+    user = message.from_user.mention
+    balance = await zeexdev.get_quota_balance(user_id)
+    user_data = await zeexdev.get_user_data(user_id)
+    type = user_data.get('usertype', "Gratuit") if user_data else "Gratuit"
+
+    if await zeexdev.has_premium_access(user_id):
+        data = await zeexdev.get_user(user_id)
         expiry_str_in_ist = data.get("expiry_time")
         time_left_str = expiry_str_in_ist - datetime.datetime.now()
-        
-        await message.reply_text(f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\nPlan :- `{type}`\nLimite de téléchargement quotidienne :- `{humanbytes(limit)}`\nUtilisé aujourd'hui :- `{humanbytes(used)}\n`Restant :- `{humanbytes(remain)}`\n⏰ Temps restant : {time_left_str}\n⌛️ Date d'expiration : {expiry_str_in_ist}", quote=True)
+        await message.reply_text(
+            f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\n"
+            f"Plan :- `{type}`\n\n"
+            f"🩸 Quotas gratuits :- `{balance['free']}`\n"
+            f"👑 Quotas premium :- `{balance['premium']}`\n"
+            f"⚡ Total :- `{balance['total']}`\n\n"
+            f"⏰ Temps restant premium : {time_left_str}\n⌛️ Date d'expiration : {expiry_str_in_ist}",
+            quote=True
+        )
     else:
-        user_data = await digital_botz.get_user_data(user_id)
-        limit = user_data.get('uploadlimit', 0)
-        used = user_data.get('used_limit', 0)
-        remain = int(limit)- int(used)
-        type = user_data.get('usertype', "Gratuit")
-        await message.reply_text(f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\nPlan :- `{type}`\nLimite de téléchargement quotidienne :- `{humanbytes(limit)}`\nUtilisé aujourd'hui :- `{humanbytes(used)}\n`Restant :- `{humanbytes(remain)}`\n⏰ Date d'expiration :- illimité\n\nSi vous souhaitez prendre un abonnement premium, cliquez sur le bouton ci-dessous 👇",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("💸 voir les plans premium 💸", callback_data='upgrade')]]), quote=True)			 
- 
+        await message.reply_text(
+            f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\n"
+            f"Plan :- `{type}`\n\n"
+            f"🩸 Quotas gratuits :- `{balance['free']}`\n"
+            f"👑 Quotas premium :- `{balance['premium']}`\n"
+            f"⚡ Total :- `{balance['total']}`\n\n"
+            f"Si tu veux plus de quotas, regarde une pub ou passe premium 👇",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("⚡ Obtenir des quotas", web_app=WebAppInfo(url=Config.WEBAPP_URL))
+            ],[
+                InlineKeyboardButton("👑 voir les plans premium 👑", callback_data='upgrade')
+            ]]),
+            quote=True
+        )
+
 
 @Client.on_message(filters.private & filters.command("plans"))
 async def plans(client, message):
     user = message.from_user
     await client.send_chat_action(message.chat.id, ChatAction.TYPING)
-    free_trial_status = await digital_botz.get_free_trial_status(user.id)
-    if not await digital_botz.has_premium_access(user.id):
+    free_trial_status = await zeexdev.get_free_trial_status(user.id)
+    if not await zeexdev.has_premium_access(user.id):
         if not free_trial_status:
-            await message.reply_text(text=rkn.UPGRADE.format(user.mention), reply_markup=upgrade_trial_button, disable_web_page_preview=True)
+            await message.reply_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), reply_markup=upgrade_trial_button, disable_web_page_preview=True)
         else:
-            await message.reply_text(text=rkn.UPGRADE.format(user.mention), reply_markup=upgrade_button, disable_web_page_preview=True)
+            await message.reply_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), reply_markup=upgrade_button, disable_web_page_preview=True)
     else:
-        await message.reply_text(text=rkn.UPGRADE.format(user.mention), reply_markup=upgrade_button, disable_web_page_preview=True)
+        await message.reply_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), reply_markup=upgrade_button, disable_web_page_preview=True)
    
   
 @Client.on_callback_query()
@@ -134,24 +151,24 @@ async def cb_handler(client, query: CallbackQuery):
         
     elif data == "upgrade":
         await client.send_chat_action(query.message.chat.id, ChatAction.TYPING)
-        free_trial_status = await digital_botz.get_free_trial_status(query.from_user.id)
-        if not await digital_botz.has_premium_access(query.from_user.id):
+        free_trial_status = await zeexdev.get_free_trial_status(query.from_user.id)
+        if not await zeexdev.has_premium_access(query.from_user.id):
             if not free_trial_status:
-                await query.message.edit_text(text=rkn.UPGRADE, disable_web_page_preview=True, reply_markup=upgrade_trial_button)   
+                await query.message.edit_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), disable_web_page_preview=True, reply_markup=upgrade_trial_button)   
             else:
-                await query.message.edit_text(text=rkn.UPGRADE, disable_web_page_preview=True, reply_markup=upgrade_button)
+                await query.message.edit_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), disable_web_page_preview=True, reply_markup=upgrade_button)
         else:
-            await query.message.edit_text(text=rkn.UPGRADE, disable_web_page_preview=True, reply_markup=upgrade_button)
+            await query.message.edit_text(text=rkn.UPGRADE.format(Config.QUOTA_EXPIRY_HOURS), disable_web_page_preview=True, reply_markup=upgrade_button)
            
     elif data == "give_trial":
         await client.send_chat_action(query.message.chat.id, ChatAction.TYPING)
         await query.message.delete()
-        free_trial_status = await digital_botz.get_free_trial_status(query.from_user.id)
+        free_trial_status = await zeexdev.get_free_trial_status(query.from_user.id)
         if not free_trial_status:            
-            await digital_botz.give_free_trail(query.from_user.id)
-            new_text = "**Votre essai premium a été ajouté pour 12 heures.\n\nVous pouvez utiliser l'essai gratuit pendant 12 heures à partir de maintenant 😀\n\nआप अब से 𝟷𝟸 घण्टा के लिए निःशुल्क ट्रायल का उपयोग कर सकते हैं 😀**"
+            await zeexdev.give_free_trail(query.from_user.id)
+            new_text = "**👹 Ton essai premium a été activé pour 12 heures, et 50 quotas premium t'ont été offerts.**"
         else:
-            new_text = "**🤣 Vous avez déjà utilisé l'essai gratuit. Veuillez acheter un abonnement ici 👉 /plans**"
+            new_text = "**🤣 Tu as déjà utilisé ton essai gratuit. Passe premium ici 👉 /plans**"
         await client.send_message(query.from_user.id, text=new_text)
 
     elif data == "thumbnail":
@@ -188,8 +205,8 @@ async def cb_handler(client, query: CallbackQuery):
       
     elif data == "bot_status":
         await client.send_chat_action(query.message.chat.id, ChatAction.TYPING)
-        total_users = await digital_botz.total_users_count()
-        total_premium_users = await digital_botz.total_premium_users_count()
+        total_users = await zeexdev.total_users_count()
+        total_premium_users = await zeexdev.total_premium_users_count()
         uptime = time.strftime("%Hh%Mm%Ss", time.gmtime(time.time() - client.uptime))    
         sent = humanbytes(psutil.net_io_counters().bytes_sent)
         recv = humanbytes(psutil.net_io_counters().bytes_recv)

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>SukunaRenamer — Quotas</title>
+<link rel="stylesheet" href="assets/style.css" />
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+
+<!-- Monetag : colle ici EXACTEMENT le script fourni dans ton dashboard pour ta zone -->
+<script src='//libtl.com/sdk.js' data-zone='REPLACE_MONETAG_ZONE_ID' data-sdk='show_REPLACE_MONETAG_ZONE_ID'></script>
+
+<!-- AdsGram -->
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="seal" aria-hidden="true">
+    <svg viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="46" stroke="url(#g1)" stroke-width="1.4"/>
+      <circle cx="50" cy="50" r="34" stroke="url(#g1)" stroke-width="1.2" stroke-dasharray="2 6"/>
+      <circle cx="50" cy="50" r="4" fill="url(#g1)"/>
+      <path d="M50 4 L53 16 L50 20 L47 16 Z" fill="url(#g1)"/>
+      <path d="M50 96 L53 84 L50 80 L47 84 Z" fill="url(#g1)"/>
+      <path d="M4 50 L16 47 L20 50 L16 53 Z" fill="url(#g1)"/>
+      <path d="M96 50 L84 47 L80 50 L84 53 Z" fill="url(#g1)"/>
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="100" y2="100">
+          <stop offset="0" stop-color="#b3123a"/>
+          <stop offset="1" stop-color="#7c1fd1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="eyebrow">Ryomen Sukuna Fukuma Mizushi</div>
+  <h1>SukunaRenamer</h1>
+  <div class="sub">Regarde une publicité, reçois des quotas instantanément.</div>
+
+  <div class="topnav">
+    <span></span>
+    <a class="nav-link primary" href="premium.html">
+      Avantages premium
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="balance-row">
+      <div>
+        <div class="balance-label">Total disponible</div>
+        <div class="balance-value" id="totalVal">—</div>
+      </div>
+      <div class="card-icon" style="width:48px;height:48px;margin:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="balance-grid">
+      <div class="stat"><div class="n" id="freeVal">—</div><div class="l">Gratuits (expirent)</div></div>
+      <div class="stat"><div class="n" id="premiumVal">—</div><div class="l">Premium (à vie)</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center;">
+    <div class="lottie-box" id="fireLottie"></div>
+    <button class="btn" id="watchBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Regarder une pub (+<span id="perAdVal">15</span>)
+    </button>
+    <button class="btn secondary" id="closeBtn">Fermer</button>
+    <div class="steps">
+      <div class="step" id="step1"></div>
+      <div class="step" id="step2"></div>
+      <div class="step" id="step3"></div>
+    </div>
+    <div class="status" id="statusText">Chargement de ton profil…</div>
+  </div>
+
+  <footer>SukunaRenamer — quotas gratuits valables <span id="expiryHours">35</span>h</footer>
+</div>
+
+<script src="assets/config.js"></script>
+<script>
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+const initData = tg ? tg.initData : "";
+
+const els = {
+  total: document.getElementById("totalVal"),
+  free: document.getElementById("freeVal"),
+  premium: document.getElementById("premiumVal"),
+  perAd: document.getElementById("perAdVal"),
+  expiryHours: document.getElementById("expiryHours"),
+  watchBtn: document.getElementById("watchBtn"),
+  closeBtn: document.getElementById("closeBtn"),
+  status: document.getElementById("statusText"),
+  step1: document.getElementById("step1"),
+  step2: document.getElementById("step2"),
+  step3: document.getElementById("step3"),
+};
+
+let currentToken = null;
+let cooldownTimer = null;
+
+lottie.loadAnimation({
+  container: document.getElementById("fireLottie"),
+  renderer: "svg",
+  loop: true,
+  autoplay: true,
+  path: "assets/lotties/fast.json",
+});
+
+function setStatus(msg, cls) {
+  els.status.textContent = msg;
+  els.status.className = "status" + (cls ? " " + cls : "");
+}
+
+function setSteps(activeIndex, doneUpTo) {
+  if (doneUpTo === undefined) doneUpTo = -1;
+  [els.step1, els.step2, els.step3].forEach(function (el, i) {
+    el.className = "step" + (i <= doneUpTo ? " done" : i === activeIndex ? " active" : "");
+  });
+}
+
+function renderBalance(balance) {
+  els.total.textContent = balance.total;
+  els.free.textContent = balance.free;
+  els.premium.textContent = balance.premium;
+}
+
+function startCooldown(seconds) {
+  els.watchBtn.disabled = true;
+  let remaining = seconds;
+  clearInterval(cooldownTimer);
+  cooldownTimer = setInterval(function () {
+    remaining -= 1;
+    if (remaining <= 0) {
+      clearInterval(cooldownTimer);
+      els.watchBtn.disabled = false;
+      setStatus("Prêt à regarder une pub.");
+    } else {
+      setStatus("Prochaine pub disponible dans " + remaining + "s");
+    }
+  }, 1000);
+}
+
+async function loadSession() {
+  setStatus("Chargement de ton profil…");
+  try {
+    const res = await fetch(API_BASE + "/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ init_data: initData }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setStatus(data.message || "Impossible de charger ton profil. Ouvre depuis le bot Telegram.", "err");
+      els.watchBtn.disabled = true;
+      return;
+    }
+    currentToken = data.token;
+    renderBalance(data.balance);
+    els.perAd.textContent = data.quota_per_ad;
+    els.expiryHours.textContent = data.quota_expiry_hours;
+
+    if (data.cooldown_seconds_left > 0) {
+      startCooldown(data.cooldown_seconds_left);
+    } else {
+      setStatus("Prêt à regarder une pub.");
+    }
+  } catch (e) {
+    setStatus("Erreur réseau. Réessaie.", "err");
+  }
+}
+
+function showMonetagInterstitial() {
+  return new Promise(function (resolve) {
+    try {
+      const fn = window["show_REPLACE_MONETAG_ZONE_ID"];
+      if (typeof fn === "function") {
+        fn().then(resolve).catch(resolve);
+      } else {
+        resolve();
+      }
+    } catch (e) {
+      resolve();
+    }
+  });
+}
+
+function showAdsgramRewarded() {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (!window.Adsgram) return reject(new Error("AdsGram indisponible"));
+      const controller = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+      controller.show().then(resolve).catch(reject);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+async function creditReward() {
+  const res = await fetch(API_BASE + "/api/reward", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData, token: currentToken }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
+}
+
+els.watchBtn.addEventListener("click", async function () {
+  if (!currentToken) {
+    setStatus("Session expirée, rouvre la Mini App.", "err");
+    return;
+  }
+  els.watchBtn.disabled = true;
+  try {
+    setSteps(0);
+    setStatus("Chargement de la publicité…");
+    await showMonetagInterstitial();
+
+    setSteps(1, 0);
+    setStatus("Regarde la vidéo jusqu'au bout…");
+    await showAdsgramRewarded();
+
+    setSteps(2, 1);
+    setStatus("Crédit de tes quotas…");
+    const result = await creditReward();
+
+    setSteps(3, 2);
+    renderBalance(result.balance);
+    setStatus("+" + result.added + " quotas reçus.", "ok");
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+
+    await loadSession();
+  } catch (e) {
+    const msg = (e && e.error === "cooldown")
+      ? "Attends un peu avant la prochaine pub."
+      : "La pub n'a pas été complétée. Réessaie.";
+    setStatus(msg, "err");
+    els.watchBtn.disabled = false;
+    setSteps(-1);
+  }
+});
+
+els.closeBtn.addEventListener("click", function () {
+  if (tg) tg.close();
+});
+
+loadSession();
+</script>
+</body>
+</html>

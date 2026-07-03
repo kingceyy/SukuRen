@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>SukunaRenamer — Premium</title>
+<link rel="stylesheet" href="assets/style.css" />
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topnav">
+    <a class="nav-link" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Retour
+    </a>
+    <span></span>
+  </div>
+
+  <img class="hero-img" src="assets/img/sukuna.png" alt="Ryomen Sukuna" />
+
+  <div class="eyebrow">Domaine Malveillant</div>
+  <h1>Avantages Premium</h1>
+  <div class="sub">Les quotas premium n'expirent jamais et te suivent partout — même quand les quotas gratuits se dissipent après 35 heures.</div>
+
+  <!-- Vitesse : commune aux deux plans -->
+  <div class="card" style="display:flex; align-items:center; gap:16px;">
+    <div class="lottie-box small" id="fastLottie"></div>
+    <div>
+      <h3>Renommage instantané</h3>
+      <p>Quel que soit ton plan, Sukuna exécute chaque renommage en un instant. La vitesse ne dépend jamais de ton abonnement.</p>
+    </div>
+  </div>
+
+  <!-- Comparatif -->
+  <div class="compare">
+    <div class="plan">
+      <div class="plan-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Gratuit
+      </div>
+      <div class="lottie-box small" id="freeLottie" style="margin-bottom:12px;"></div>
+      <div class="plan-title">Vaisseau</div>
+      <ul>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Jusqu'à 2 Go par fichier
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Quotas via publicité (+15 / pub)
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Quotas valables 35 heures
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Renommage illimité en nombre
+        </li>
+      </ul>
+    </div>
+
+    <div class="plan premium">
+      <div class="plan-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20l-1.5-9-4.5 4-4-7-4 7-4.5-4L2 18z"/></svg>
+        Premium
+      </div>
+      <div class="lottie-box small" id="premiumLottie" style="margin-bottom:12px;"></div>
+      <div class="plan-title">Roi des malédictions</div>
+      <ul>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Jusqu'à 4 Go par fichier
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Quotas premium <strong>n'expirent jamais</strong>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Accès prioritaire au traitement
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Essai gratuit 12h disponible
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center; margin-top:16px;">
+    <div class="card-icon" style="margin:0 auto 12px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <h3>Devenir un vaisseau premium</h3>
+    <p>Les quotas premium sont attribués directement par l'administrateur. Contacte-le pour négocier ton tribut de quotas.</p>
+    <a class="btn" href="https://t.me/Kingcey" target="_blank" rel="noopener" style="margin-top:14px; text-decoration:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Contacter l'administrateur
+    </a>
+    <a class="btn secondary" href="index.html" style="text-decoration:none; color:var(--text);">
+      Obtenir des quotas gratuits
+    </a>
+  </div>
+
+  <footer>SukunaRenamer — Domaine Malveillant</footer>
+</div>
+
+<script>
+lottie.loadAnimation({
+  container: document.getElementById("fastLottie"),
+  renderer: "svg", loop: true, autoplay: true,
+  path: "assets/lotties/fast.json",
+});
+lottie.loadAnimation({
+  container: document.getElementById("freeLottie"),
+  renderer: "svg", loop: true, autoplay: true,
+  path: "assets/lotties/2gb.json",
+});
+lottie.loadAnimation({
+  container: document.getElementById("premiumLottie"),
+  renderer: "svg", loop: true, autoplay: true,
+  path: "assets/lotties/4gb.json",
+});
+
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+</script>
+</body>
+</html>

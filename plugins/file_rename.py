@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.enums import MessageMediaType, ChatAction
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, WebAppInfo
 
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -10,7 +10,7 @@ from PIL import Image
 
 from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path
 from helper.database import zeexdev
-from config import Config
+from config import Config, rkn
 
 from asyncio import sleep
 import os, time, asyncio
@@ -19,6 +19,14 @@ UPLOAD_TEXT = """Téléversement en cours..."""
 DOWNLOAD_TEXT = """Téléchargement en cours..."""
 
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION)
+
+
+def _quota_low_markup():
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("⚡ Obtenir 15 quotas (pub)", web_app=WebAppInfo(url=Config.WEBAPP_URL))],
+        [InlineKeyboardButton("👑 Plans premium", callback_data="plans")]
+    ])
+
 
 @Client.on_message(filters.private & (filters.document | filters.audio | filters.video))
 async def rename_start(client, message):
@@ -31,24 +39,21 @@ async def rename_start(client, message):
     dcid = FileId.decode(rkn_file.file_id).dc_id
     extension_type = mime_type.split('/')[0]
 
-    await zeexdev.reset_uploadlimit_access(user_id)
-    user_data = await zeexdev.get_user_data(user_id)
-    limit = user_data.get('uploadlimit', 0)
-    used = user_data.get('used_limit', 0)
-    remain = int(limit) - int(used)
-    
-    if remain < int(rkn_file.file_size):
+    # 1 quota = 1 fichier renommé, quelle que soit sa taille
+    balance = await zeexdev.get_quota_balance(user_id)
+    if balance["total"] < 1:
         return await message.reply_text(
-            f"100% de la limite quotidienne {humanbytes(limit)} atteinte.\n\nTaille du fichier : {humanbytes(rkn_file.file_size)}\nVotre utilisation : {humanbytes(used)}\n\nIl vous reste seulement **{humanbytes(remain)}**.\nVeuillez passer à un abonnement premium.",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🪪 Passer à Premium", callback_data="plans")]])
+            rkn.QUOTA_LOW_TXT.format(remain=balance["total"], per_ad=Config.QUOTA_PER_AD, expiry=Config.QUOTA_EXPIRY_HOURS),
+            reply_markup=_quota_low_markup()
         )
-         
+
+    # La taille de fichier reste une limite technique (API Bot Telegram), pas économique
     if await zeexdev.has_premium_access(user_id):
         if not Config.STRING_SESSION and rkn_file.file_size > 2000 * 1024 * 1024:
             return await message.reply_text("Désolé, ce bot ne supporte pas les fichiers de plus de 2Go")
     else:
         if rkn_file.file_size > 2000 * 1024 * 1024:
-            return await message.reply_text("Pour renommer des fichiers de plus de 4Go, vous devez passer à un abonnement premium. /plans")
+            return await message.reply_text("Pour renommer des fichiers de plus de 2Go, tu dois passer premium. /plans")
 
     try:
         await message.reply_text(
@@ -113,14 +118,21 @@ async def doc(bot, update):
     user_id = update.message.chat.id
     new_name = update.message.text
     new_filename_ = new_name.split(":-")[1]
-    user_data = await zeexdev.get_user_data(user_id)
+
+    # Vérification de sécurité : le quota peut avoir été consommé entre-temps (autre fichier en parallèle)
+    balance = await zeexdev.get_quota_balance(user_id)
+    if balance["total"] < 1:
+        return await rkn_processing.edit(
+            rkn.QUOTA_LOW_TXT.format(remain=balance["total"], per_ad=Config.QUOTA_PER_AD, expiry=Config.QUOTA_EXPIRY_HOURS),
+            reply_markup=_quota_low_markup()
+        )
 
     try:
         prefix = await zeexdev.get_prefix(user_id)
         suffix = await zeexdev.get_suffix(user_id)
         new_filename = add_prefix_suffix(new_filename_, prefix, suffix)
     except Exception as e:
-        return await rkn_processing.edit(f"⚠️ Erreur lors de l'ajout du préfixe/suffixe\n\nContactez le support : @RknDeveloperr\nErreur : {e}")
+        return await rkn_processing.edit(f"⚠️ Erreur lors de l'ajout du préfixe/suffixe\n\nContactez le support : @Kingcey\nErreur : {e}")
 
     file = update.message.reply_to_message
     media = getattr(file, file.media.value)
@@ -128,13 +140,8 @@ async def doc(bot, update):
     file_path = f"Renames/{new_filename}"
     metadata_path = f"Metadata/{new_filename}"
 
-    limit = user_data.get('uploadlimit', 0)
-    used = user_data.get('used_limit', 0)
-
     await rkn_processing.edit("`Téléchargement...`")
     await bot.send_chat_action(update.message.chat.id, ChatAction.UPLOAD_DOCUMENT)
-    total_used = int(used) + int(media.file_size)
-    await zeexdev.set_used_limit(user_id, total_used)
     
     try:
         dl_path = await bot.download_media(
@@ -144,7 +151,6 @@ async def doc(bot, update):
             progress_args=(DOWNLOAD_TEXT, rkn_processing, time.time())
         )
     except Exception as e:
-        await zeexdev.set_used_limit(user_id, used)
         return await rkn_processing.edit(str(e))
 
     metadata_mode = await zeexdev.get_metadata_mode(user_id)
@@ -186,7 +192,6 @@ async def doc(bot, update):
                 filesize=humanbytes(media.file_size), 
                 duration=convert(duration))
         except Exception as e:
-            await zeexdev.set_used_limit(user_id, used)
             return await rkn_processing.edit(f"Erreur dans votre légende : {e}")
     else:
         caption = f"**{new_filename}**"
@@ -233,7 +238,6 @@ async def doc(bot, update):
             await bot.copy_message(update.from_user.id, filw.chat.id, filw.id)
             await bot.delete_messages(filw.chat.id, filw.id)
         except Exception as e:
-            await zeexdev.set_used_limit(user_id, used)
             await remove_path(ph_path, file_path, dl_path, metadata_path)
             return await rkn_processing.edit(f"Erreur : {e}")
     else:
@@ -265,9 +269,12 @@ async def doc(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         except Exception as e:
-            await zeexdev.set_used_limit(user_id, used)
             await remove_path(ph_path, file_path, dl_path, metadata_path)
             return await rkn_processing.edit(f"Erreur : {e}")
 
+    # Le fichier est bien parti : on consomme le quota maintenant (jamais avant, jamais sur échec)
+    await zeexdev.consume_quota(user_id, 1)
+    new_balance = await zeexdev.get_quota_balance(user_id)
+
     await remove_path(ph_path, file_path, dl_path, metadata_path)
-    await rkn_processing.edit("Téléversement terminé avec succès ✅")
+    await rkn_processing.edit(f"Téléversement terminé avec succès ✅\n\n⚡ Quotas restants : `{new_balance['total']}`")
