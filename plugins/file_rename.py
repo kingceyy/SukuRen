@@ -79,36 +79,49 @@ async def rename_start(client, message):
 
 @Client.on_message(filters.private & filters.reply)
 async def refunc(client, message):
-    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     reply_message = message.reply_to_message
-    if (reply_message.reply_markup) and isinstance(reply_message.reply_markup, ForceReply):
-        new_name = message.text 
-        await message.delete()
-        msg = await client.get_messages(message.chat.id, reply_message.id)
-        file = msg.reply_to_message
-        media = getattr(file, file.media.value)
-        
-        if not "." in new_name:
-            extn = media.file_name.rsplit('.', 1)[-1] if "." in media.file_name else "mkv"
-            new_name = f"{new_name}.{extn}"
-        
-        await reply_message.delete()
 
-        button = [[InlineKeyboardButton("📁 Document", callback_data="upload_document")]]
-        if file.media in [MessageMediaType.VIDEO, MessageMediaType.DOCUMENT]:
-            button.append([InlineKeyboardButton("🎥 Vidéo", callback_data="upload_video")])
-        elif file.media == MessageMediaType.AUDIO:
-            button.append([InlineKeyboardButton("🎵 Audio", callback_data="upload_audio")])
+    # Ce handler capte TOUTES les réponses en privé (Pyrogram s'arrête au premier
+    # handler qui matche). On ne traite ici que notre propre prompt de renommage,
+    # identifié par son texte — tout le reste est délégué aux autres handlers
+    # (ex : la saisie de métadonnées personnalisées dans plugins/metadata.py).
+    is_rename_prompt = (
+        reply_message.reply_markup
+        and isinstance(reply_message.reply_markup, ForceReply)
+        and reply_message.text
+        and "Veuillez entrer le nouveau nom de fichier" in reply_message.text
+    )
+    if not is_rename_prompt:
+        return await message.continue_propagation()
 
-        sent = await message.reply(
-            text=f"<b>Sélectionnez le type de fichier de sortie</b>\n<b>• Nom du fichier :</b> <code>{new_name}</code>",
-            reply_to_message_id=file.id,
-            reply_markup=InlineKeyboardMarkup(button)
-        )
-        # Telegram ne renvoie jamais les balises de formatage dans message.text (elles sont
-        # stockées à part en "entities"), donc on ne peut pas relire le nom depuis le texte.
-        # On le garde en mémoire, indexé par l'ID du message qui porte les boutons.
-        pending_renames[sent.id] = new_name
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
+    new_name = message.text 
+    await message.delete()
+    msg = await client.get_messages(message.chat.id, reply_message.id)
+    file = msg.reply_to_message
+    media = getattr(file, file.media.value)
+    
+    if not "." in new_name:
+        extn = media.file_name.rsplit('.', 1)[-1] if "." in media.file_name else "mkv"
+        new_name = f"{new_name}.{extn}"
+    
+    await reply_message.delete()
+
+    button = [[InlineKeyboardButton("📁 Document", callback_data="upload_document")]]
+    if file.media in [MessageMediaType.VIDEO, MessageMediaType.DOCUMENT]:
+        button.append([InlineKeyboardButton("🎥 Vidéo", callback_data="upload_video")])
+    elif file.media == MessageMediaType.AUDIO:
+        button.append([InlineKeyboardButton("🎵 Audio", callback_data="upload_audio")])
+
+    sent = await message.reply(
+        text=f"<b>Sélectionnez le type de fichier de sortie</b>\n<b>• Nom du fichier :</b> <code>{new_name}</code>",
+        reply_to_message_id=file.id,
+        reply_markup=InlineKeyboardMarkup(button)
+    )
+    # Telegram ne renvoie jamais les balises de formatage dans message.text (elles sont
+    # stockées à part en "entities"), donc on ne peut pas relire le nom depuis le texte.
+    # On le garde en mémoire, indexé par l'ID du message qui porte les boutons.
+    pending_renames[sent.id] = new_name
 
 @Client.on_callback_query(filters.regex("upload"))
 async def doc(bot, update):
