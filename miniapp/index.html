@@ -181,10 +181,12 @@ async function loadSession() {
     if (data.cooldown_seconds_left > 0) {
       startCooldown(data.cooldown_seconds_left);
     } else {
+      els.watchBtn.disabled = false;
       setStatus("Prêt à regarder une pub.");
     }
   } catch (e) {
     setStatus("Erreur réseau. Réessaie.", "err");
+    els.watchBtn.disabled = true;
   }
 }
 
