@@ -3,8 +3,8 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # Configuration client
-    API_ID = os.environ.get("API_ID", "25926022")
-    API_HASH = os.environ.get("API_HASH", "30db27d9e56d854fb5e943723268db32")
+    API_ID = os.environ.get("API_ID", "37641587")
+    API_HASH = os.environ.get("API_HASH", "9bce1167e828939f39452795e56202a9")
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "7312727906:AAFrkZ712b6mg0Fwgfsx7dZNSJbIm5s210M") 
 
     # Session string requise pour compte premium (fichiers > 2Go)
@@ -15,9 +15,9 @@ class Config(object):
     DB_URL = os.environ.get("DB_URL","mongodb+srv://Ethan:Ethan123@telegrambots.lva9j.mongodb.net/?retryWrites=true&w=majority&appName=TELEGRAMBOTS")
  
     # Autres configurations
-    RKN_PIC = os.environ.get("RKN_PIC", "https://www.imghippo.com/i/xDs7558uYw.jpg")
-    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '8140299716').split()]
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002698474966"))
+    RKN_PIC = os.environ.get("RKN_PIC", "https://i.ibb.co/dsX1bNTN/x.jpg")
+    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '8467461906').split()]
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1003340962000"))
 
     # Abonnement forcé
     try:
@@ -63,8 +63,8 @@ Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malé
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├👹 Nom : {}
-├⛩️ Domaine Malveillant : {}
-├👑 Roi des malédictions : {}
+├⛩️ Domaine Malveillant : <a href="https://t.me/itz_kingcey">It'z Kingcey</a>
+├👑 Roi des malédictions : <a href="https://t.me/+u5qxRjapSF05YTBk">Chat</a>
 ├📕 Technique innée : {}
 ├✏️ Langage rituel : {}
 ├💾 Sceau de stockage : {}
@@ -86,7 +86,7 @@ Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malé
 
 ⚡ Plus de quotas ? Regarde une pub, je t'en offre 15 de plus.
 
-ℹ️ Aide : <a href=https://t.me/DigitalBotz_Support>Groupe de support</a>
+ℹ️ Aide : <a href=https://t.me/+u5qxRjapSF05YTBk>Groupe de support</a>
 """
 
     UPGRADE = """
