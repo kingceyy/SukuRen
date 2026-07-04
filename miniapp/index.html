@@ -105,6 +105,10 @@ const els = {
 let currentToken = null;
 let cooldownTimer = null;
 
+if (!MONETAG_ENABLED) {
+  els.step1.style.display = "none";
+}
+
 lottie.loadAnimation({
   container: document.getElementById("fireLottie"),
   renderer: "svg",
@@ -237,15 +241,21 @@ els.watchBtn.addEventListener("click", async function () {
   }
   els.watchBtn.disabled = true;
   try {
-    setSteps(0);
-    setStatus("Publicité 1/2 en cours…");
-    await showMonetagRewarded();
+    let doneUpTo = -1;
 
-    setSteps(1, 0);
-    setStatus("Publicité 2/2 en cours…");
+    if (MONETAG_ENABLED) {
+      setSteps(0, doneUpTo);
+      setStatus("Publicité 1/2 en cours…");
+      await showMonetagRewarded();
+      doneUpTo = 0;
+    }
+
+    setSteps(1, doneUpTo);
+    setStatus(MONETAG_ENABLED ? "Publicité 2/2 en cours…" : "Publicité en cours…");
     await showAdsgramRewarded();
+    doneUpTo = 1;
 
-    setSteps(2, 1);
+    setSteps(2, doneUpTo);
     setStatus("Crédit de tes quotas…");
     const result = await creditReward();
 
@@ -271,7 +281,7 @@ els.closeBtn.addEventListener("click", function () {
 
 els.watchBtn.disabled = true;
 setStatus("Chargement des publicités…");
-loadMonetagSdk(MONETAG_ZONE_ID)
+(MONETAG_ENABLED ? loadMonetagSdk(MONETAG_ZONE_ID) : Promise.resolve())
   .then(function () { return loadSession(); })
   .catch(function () {
     setStatus("Impossible de charger la régie publicitaire. Réessaie plus tard.", "err");

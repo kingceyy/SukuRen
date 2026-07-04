@@ -6,4 +6,7 @@ const ADSGRAM_BLOCK_ID = "37235";
 
 // Monetag — Rewarded Interstitial (zone dashboard : https://libtl.com)
 // La fonction de déclenchement est automatiquement "show_" + ce zone ID.
+// Mis sur false pour le moment : seule la rewarded video AdsGram est utilisée.
+// Repasser à true (et vérifier le zone ID) pour la réactiver.
+const MONETAG_ENABLED = false;
 const MONETAG_ZONE_ID = "10518701";
