@@ -1,7 +1,7 @@
 from config import Config
 from helper.database import zeexdev
 from helper.utils import get_seconds, humanbytes
-import os, sys, time, asyncio, logging, datetime, pytz, traceback
+import os, sys, time, asyncio, logging, datetime, pytz, traceback, html
 
 from pyrogram.types import Message
 from pyrogram import Client, filters
@@ -16,10 +16,10 @@ async def get_stats(bot, message):
     total_premium_users = await zeexdev.total_premium_users_count()
     uptime = time.strftime("%Hh%Mm%Ss", time.gmtime(time.time() - bot.uptime))    
     start_t = time.time()
-    rkn = await message.reply('**Traitement en cours...**')    
+    rkn = await message.reply('<b>Traitement en cours...</b>')    
     end_t = time.time()
     time_taken_s = (end_t - start_t) * 1000
-    await rkn.edit(text=f"**--Statut du Bot--** \n\n**⌚ Temps de fonctionnement:** {uptime} \n**🐌 Latence actuelle:** `{time_taken_s:.3f} ms` \n**👭 Utilisateurs totaux:** `{total_users}`\n**💸 Utilisateurs premium:** `{total_premium_users}`")
+    await rkn.edit(text=f"<b>--Statut du Bot--</b> \n\n<b>⌚ Temps de fonctionnement:</b> {uptime} \n<b>🐌 Latence actuelle:</b> <code>{time_taken_s:.3f} ms</code> \n<b>👭 Utilisateurs totaux:</b> <code>{total_users}</code>\n<b>💸 Utilisateurs premium:</b> <code>{total_premium_users}</code>")
 
 @Client.on_message(filters.command('logs') & filters.user(Config.ADMIN))
 async def log_file(b, m):
@@ -54,14 +54,14 @@ async def add_premium(client, message):
             expiry_str_in_ist = expiry_time.astimezone(pytz.timezone("Asia/Kolkata")).strftime("%d-%m-%Y\n⏱ Heure d'expiration : %I:%M:%S %p")
             
             await message.reply_text(
-                f"Abonnement premium ajouté avec succès ✅\n\n👤 Utilisateur : {user.mention}\n⚡ ID : <code>{user_id}</code>\nPlan : `{type}`\nLimite quotidienne : `{humanbytes(limit)}`\n⏰ Accès premium : <code>{time}</code>\n\n⏳ Date d'ajout : {current_time}\n\n⌛ Date d'expiration : {expiry_str_in_ist}", 
+                f"Abonnement premium ajouté avec succès ✅\n\n👤 Utilisateur : {user.mention}\n⚡ ID : <code>{user_id}</code>\nPlan : <code>{type}</code>\nLimite quotidienne : <code>{humanbytes(limit)}</code>\n⏰ Accès premium : <code>{time}</code>\n\n⏳ Date d'ajout : {current_time}\n\n⌛ Date d'expiration : {expiry_str_in_ist}", 
                 quote=True, 
                 disable_web_page_preview=True
             )
             
             await client.send_message(
                 chat_id=user_id,
-                text=f"👋 Bonjour {user.mention},\nMerci pour votre abonnement premium.\nProfitez-en ! ✨🎉\n\n⏰ Accès premium : <code>{time}</code>\nPlan : `{type}`\nLimite quotidienne : `{humanbytes(limit)}`\n⏳ Date d'ajout : {current_time}\n\n⌛ Date d'expiration : {expiry_str_in_ist}", 
+                text=f"👋 Bonjour {user.mention},\nMerci pour votre abonnement premium.\nProfitez-en ! ✨🎉\n\n⏰ Accès premium : <code>{time}</code>\nPlan : <code>{type}</code>\nLimite quotidienne : <code>{humanbytes(limit)}</code>\n⏳ Date d'ajout : {current_time}\n\n⌛ Date d'expiration : {expiry_str_in_ist}", 
                 disable_web_page_preview=True              
             )
             return
@@ -70,7 +70,7 @@ async def add_premium(client, message):
         return
         
     await message.reply_text(
-        "Utilisation : /addpremium user_id Type_Plan (ex: `Pro`, `UltraPro`) durée (ex: '1 jour', '1 heure', '1 min', '1 mois' ou '1 année')", 
+        "Utilisation : /addpremium user_id Type_Plan (ex: <code>Pro</code>, <code>UltraPro</code>) durée (ex: '1 jour', '1 heure', '1 min', '1 mois' ou '1 année')", 
         quote=True
     )
 
@@ -93,7 +93,7 @@ async def remove_premium(bot, message):
 
 @Client.on_message(filters.private & filters.command("restart") & filters.user(Config.ADMIN))
 async def restart_bot(b, m):
-    rkn = await b.send_message(text="**🔄 Processus arrêtés. Redémarrage du bot en cours...**", chat_id=m.chat.id)
+    rkn = await b.send_message(text="<b>🔄 Processus arrêtés. Redémarrage du bot en cours...</b>", chat_id=m.chat.id)
     stats = {"failed": 0, "success": 0, "deactivated": 0, "blocked": 0}
     start_time = time.time()
     total_users = await zeexdev.total_users_count()
@@ -102,7 +102,7 @@ async def restart_bot(b, m):
         try:
             await b.send_message(
                 user['_id'],
-                f"Bonjour {(await b.get_users(user['_id'])).mention}\n\n**🔄 Processus arrêtés. Redémarrage du bot en cours...\n\n✅ Le bot a redémarré. Vous pouvez maintenant l'utiliser.**"
+                f"Bonjour {(await b.get_users(user['_id'])).mention}\n\n<b>🔄 Processus arrêtés. Redémarrage du bot en cours...\n\n✅ Le bot a redémarré. Vous pouvez maintenant l'utiliser.</b>"
             )
             stats["success"] += 1
         except InputUserDeactivated:
@@ -132,8 +132,8 @@ async def ban(c: Client, m: Message):
         await m.reply_text(
             f"Utilisez cette commande pour bannir un utilisateur.\n\n"
             f"Utilisation:\n\n"
-            f"`/ban user_id durée raison`\n\n"
-            f"Ex: `/ban 1234567 28 Utilisation abusive.`\n"
+            f"<code>/ban user_id durée raison</code>\n\n"
+            f"Ex: <code>/ban 1234567 28 Utilisation abusive.</code>\n"
             f"Cela bannira l'utilisateur 1234567 pendant 28 jours pour 'Utilisation abusive'.",
             quote=True
         )
@@ -147,8 +147,8 @@ async def ban(c: Client, m: Message):
         try:
             await c.send_message(
                 user_id,              
-                f"Vous êtes banni de ce bot pour **{ban_duration}** jour(s) pour la raison __{ban_reason}__ \n\n"
-                f"**Message de l'administrateur**"
+                f"Vous êtes banni de ce bot pour <b>{ban_duration}</b> jour(s) pour la raison <i>{ban_reason}</i> \n\n"
+                f"<b>Message de l'administrateur</b>"
             )
         except:
             traceback.print_exc()
@@ -157,7 +157,7 @@ async def ban(c: Client, m: Message):
         await m.reply_text(f"Utilisateur {user_id} banni pour {ban_duration} jours. Raison: {ban_reason}", quote=True)
     except:
         await m.reply_text(
-            f"Erreur !\n\n`{traceback.format_exc()}`",
+            f"Erreur !\n\n<code>{html.escape(traceback.format_exc())}</code>",
             quote=True
         )
 
@@ -166,8 +166,8 @@ async def unban(c: Client, m: Message):
     if len(m.command) == 1:
         await m.reply_text(
             f"Utilisez cette commande pour débannir un utilisateur.\n\n"
-            f"Utilisation:\n\n`/unban user_id`\n\n"
-            f"Ex: `/unban 1234567`",
+            f"Utilisation:\n\n<code>/unban user_id</code>\n\n"
+            f"Ex: <code>/unban 1234567</code>",
             quote=True
         )
         return
@@ -182,7 +182,7 @@ async def unban(c: Client, m: Message):
         await m.reply_text(f"Utilisateur {user_id} débanni", quote=True)
     except:
         await m.reply_text(
-            f"Erreur !\n\n`{traceback.format_exc()}`",
+            f"Erreur !\n\n<code>{html.escape(traceback.format_exc())}</code>",
             quote=True
         )
 
@@ -191,11 +191,11 @@ async def _banned_users(_, m: Message):
     banned_users = []
     async for user in await zeexdev.get_all_banned_users():
         banned_users.append(
-            f"> **ID**: `{user['id']}`, **Durée**: `{user['ban_status']['ban_duration']}`, "
-            f"**Date**: `{user['ban_status']['banned_on']}`, **Raison**: `{user['ban_status']['ban_reason']}`"
+            f"> <b>ID</b>: <code>{user['id']}</code>, <b>Durée</b>: <code>{user['ban_status']['ban_duration']}</code>, "
+            f"<b>Date</b>: <code>{user['ban_status']['banned_on']}</code>, <b>Raison</b>: <code>{user['ban_status']['ban_reason']}</code>"
         )
     
-    reply_text = f"Utilisateurs bannis: `{len(banned_users)}`\n\n" + "\n\n".join(banned_users)
+    reply_text = f"Utilisateurs bannis: <code>{len(banned_users)}</code>\n\n" + "\n\n".join(banned_users)
     
     if len(reply_text) > 4096:
         with open('banned-users.txt', 'w') as f:
@@ -234,7 +234,7 @@ async def broadcast_handler(bot: Client, m: Message):
     
     completed_in = datetime.timedelta(seconds=int(time.time() - start_time))
     await stats_msg.edit(
-        f"Diffusion terminée en: `{completed_in}`.\n\nUtilisateurs totaux {total_users}\nTerminé: {stats['done']} / {total_users}\nSuccès: {stats['success']}\nÉchecs: {stats['failed']}"
+        f"Diffusion terminée en: <code>{completed_in}</code>.\n\nUtilisateurs totaux {total_users}\nTerminé: {stats['done']} / {total_users}\nSuccès: {stats['success']}\nÉchecs: {stats['failed']}"
     )
 
 async def send_msg(user_id, message):

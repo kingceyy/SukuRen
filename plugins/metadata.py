@@ -21,14 +21,14 @@ METADATA_FALSE = [
 @Client.on_message(filters.private & filters.command('metadata'))
 async def handle_metadata(bot: Client, message: Message):
     await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
-    RknDev = await message.reply_text("**Veuillez patienter...**", reply_to_message_id=message.id)
+    RknDev = await message.reply_text("<i><b>Veuillez patienter...</b></i>", reply_to_message_id=message.id)
     
     bool_metadata = await zeexdev.get_metadata_mode(message.from_user.id)
     user_metadata = await zeexdev.get_metadata_code(message.from_user.id)
     
     keyboard = METADATA_TRUE if bool_metadata else METADATA_FALSE
     await RknDev.edit(
-        f"Vos métadonnées actuelles :-\n\n➜ `{user_metadata}`",
+        f"Vos métadonnées actuelles :-\n\n➜ <code>{user_metadata}</code>",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
@@ -46,7 +46,7 @@ async def query_metadata(bot: Client, query: CallbackQuery):
             
             keyboard = METADATA_TRUE if new_state else METADATA_FALSE
             await query.message.edit(
-                f"Vos métadonnées actuelles :-\n\n➜ `{user_metadata}`",
+                f"Vos métadonnées actuelles :-\n\n➜ <code>{user_metadata}</code>",
                 reply_markup=InlineKeyboardMarkup(keyboard)
             )
             
@@ -64,14 +64,14 @@ async def query_metadata(bot: Client, query: CallbackQuery):
                 )
                 
                 await bot.send_chat_action(query.message.chat.id, ChatAction.TYPING)
-                RknDev = await query.message.reply_text("**Veuillez patienter...**", reply_to_message_id=metadata_msg.id)
+                RknDev = await query.message.reply_text("<i><b>Veuillez patienter...</b></i>", reply_to_message_id=metadata_msg.id)
                 
                 await zeexdev.set_metadata_code(query.from_user.id, metadata_code=metadata_msg.text)
-                await RknDev.edit("**Votre code de métadonnées a été défini avec succès ✅**")
+                await RknDev.edit("<b>Votre code de métadonnées a été défini avec succès ✅</b>")
                 
             except ListenerTimeout:
                 await query.message.reply_text(
-                    "⚠️ Erreur !\n\n**Temps de requête écoulé.**\nRedémarrez avec /metadata",
+                    "⚠️ Erreur !\n\n<b>Temps de requête écoulé.</b>\nRedémarrez avec /metadata",
                     reply_to_message_id=query.message.id
                 )
                 

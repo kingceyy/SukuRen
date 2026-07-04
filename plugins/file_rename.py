@@ -57,7 +57,7 @@ async def rename_start(client, message):
 
     try:
         await message.reply_text(
-            text=f"**__Information sur le fichier__\n\n◈ Nom original : `{filename}`\n\n◈ Extension : `{extension_type.upper()}`\n◈ Taille : `{filesize}`\n◈ Type MIME : `{mime_type}`\n◈ DC ID : `{dcid}`\n\nVeuillez entrer le nouveau nom de fichier avec son extension...__**",
+            text=f"<b><i>Information sur le fichier</i></b>\n\n◈ Nom original : <code>{filename}</code>\n\n◈ Extension : <code>{extension_type.upper()}</code>\n◈ Taille : <code>{filesize}</code>\n◈ Type MIME : <code>{mime_type}</code>\n◈ DC ID : <code>{dcid}</code>\n\nVeuillez entrer le nouveau nom de fichier avec son extension...",
             reply_to_message_id=message.id,  
             reply_markup=ForceReply(True)
         )
@@ -65,7 +65,7 @@ async def rename_start(client, message):
     except FloodWait as e:
         await sleep(e.value)
         await message.reply_text(
-            text=f"**__Information sur le fichier__\n\n◈ Nom original : `{filename}`\n\n◈ Extension : `{extension_type.upper()}`\n◈ Taille : `{filesize}`\n◈ Type MIME : `{mime_type}`\n◈ DC ID : `{dcid}`\n\nVeuillez entrer le nouveau nom de fichier avec son extension...__**",
+            text=f"<b><i>Information sur le fichier</i></b>\n\n◈ Nom original : <code>{filename}</code>\n\n◈ Extension : <code>{extension_type.upper()}</code>\n◈ Taille : <code>{filesize}</code>\n◈ Type MIME : <code>{mime_type}</code>\n◈ DC ID : <code>{dcid}</code>\n\nVeuillez entrer le nouveau nom de fichier avec son extension...",
             reply_to_message_id=message.id,  
             reply_markup=ForceReply(True)
         )
@@ -96,7 +96,7 @@ async def refunc(client, message):
             button.append([InlineKeyboardButton("🎵 Audio", callback_data="upload_audio")])
             
         await message.reply(
-            text=f"**Sélectionnez le type de fichier de sortie**\n**• Nom du fichier :** `{new_name}`",
+            text=f"<b>Sélectionnez le type de fichier de sortie</b>\n<b>• Nom du fichier :</b> <code>{new_name}</code>",
             reply_to_message_id=file.id,
             reply_markup=InlineKeyboardMarkup(button)
         )
@@ -110,7 +110,7 @@ async def doc(bot, update):
     }[update.data.split("_")[1]]
     
     await bot.send_chat_action(update.message.chat.id, action)
-    rkn_processing = await update.message.edit("`Traitement en cours...`")
+    rkn_processing = await update.message.edit("<code>Traitement en cours...</code>")
     
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
@@ -118,10 +118,10 @@ async def doc(bot, update):
     user_id = update.message.chat.id
     new_name = update.message.text
 
-    # Le nom est toujours encadré par des backticks dans le message envoyé par refunc() :
-    # "**• Nom du fichier :** `nom.ext`". On extrait ce qu'il y a entre les backticks
+    # Le nom est toujours encadré par <code>...</code> dans le message envoyé par refunc() :
+    # "<b>• Nom du fichier :</b> <code>nom.ext</code>". On extrait ce contenu par regex
     # plutôt que de dépendre d'un séparateur texte fragile.
-    backtick_match = re.search(r"`([^`]+)`", new_name)
+    backtick_match = re.search(r"<code>(.+?)</code>", new_name)
     if not backtick_match:
         return await rkn_processing.edit("⚠️ Impossible de retrouver le nom de fichier. Recommence l'opération.")
     new_filename_ = backtick_match.group(1)
@@ -147,7 +147,7 @@ async def doc(bot, update):
     file_path = f"Renames/{new_filename}"
     metadata_path = f"Metadata/{new_filename}"
 
-    await rkn_processing.edit("`Téléchargement...`")
+    await rkn_processing.edit("<code>Téléchargement...</code>")
     await bot.send_chat_action(update.message.chat.id, ChatAction.UPLOAD_DOCUMENT)
     
     try:
@@ -165,7 +165,7 @@ async def doc(bot, update):
         metadata = await zeexdev.get_metadata_code(user_id)
         if metadata:
             await bot.send_chat_action(update.message.chat.id, ChatAction.TYPING)
-            await rkn_processing.edit("Métadonnées détectées\n\n__**Veuillez patienter...**__\n**Ajout des métadonnées au fichier...**")
+            await rkn_processing.edit("Métadonnées détectées\n\n<i><b>Veuillez patienter...</b></i>\n<b>Ajout des métadonnées au fichier...</b>")
             cmd = f"""ffmpeg -i {dl_path} {metadata} {metadata_path}"""
             
             process = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
@@ -174,9 +174,9 @@ async def doc(bot, update):
             if er:
                 return await rkn_processing.edit(f"Erreur : {er}")
             
-            await rkn_processing.edit("**Métadonnées ajoutées avec succès ✅**\n\n**Tentative de téléversement...**")
+            await rkn_processing.edit("<b>Métadonnées ajoutées avec succès ✅</b>\n\n<b>Tentative de téléversement...</b>")
     else:
-        await rkn_processing.edit("`Tentative de téléversement...`")
+        await rkn_processing.edit("<code>Tentative de téléversement...</code>")
         
     duration = 0
     try:
@@ -201,7 +201,7 @@ async def doc(bot, update):
         except Exception as e:
             return await rkn_processing.edit(f"Erreur dans votre légende : {e}")
     else:
-        caption = f"**{new_filename}**"
+        caption = f"<b>{new_filename}</b>"
  
     if media.thumbs or c_thumb:
         ph_path = await bot.download_media(c_thumb) if c_thumb else await bot.download_media(media.thumbs[0].file_id)
@@ -284,4 +284,4 @@ async def doc(bot, update):
     new_balance = await zeexdev.get_quota_balance(user_id)
 
     await remove_path(ph_path, file_path, dl_path, metadata_path)
-    await rkn_processing.edit(f"Téléversement terminé avec succès ✅\n\n⚡ Quotas restants : `{new_balance['total']}`")
+    await rkn_processing.edit(f"Téléversement terminé avec succès ✅\n\n⚡ Quotas restants : <code>{new_balance['total']}</code>")

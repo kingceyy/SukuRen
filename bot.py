@@ -72,10 +72,10 @@ class DigitalRenameBot(Client):
         
         for id in Config.ADMIN:
             if Config.STRING_SESSION:
-                try: await self.send_message(id, f"𝟮𝗚𝗕+ est defini comme support.\n\n**__{me.first_name} à démarré.....✨️__**")                                
+                try: await self.send_message(id, f"𝟮𝗚𝗕+ est defini comme support.\n\n<b><i>{me.first_name} à démarré.....✨️</i></b>")                                
                 except: pass
             else:
-                try: await self.send_message(id, f"𝟮𝗚𝗕- est défini comme support.\n\n**__{me.first_name}  à démarré.....✨️__**")                                
+                try: await self.send_message(id, f"𝟮𝗚𝗕- est défini comme support.\n\n<b><i>{me.first_name}  à démarré.....✨️</i></b>")                                
                 except: pass
                     
         if Config.LOG_CHANNEL:
@@ -83,13 +83,13 @@ class DigitalRenameBot(Client):
                 curr = datetime.datetime.now(pytz.timezone("Africa/Lome"))
                 date = curr.strftime('%d %B, %Y')
                 time = curr.strftime('%I:%M:%S %p')
-                await self.send_message(Config.LOG_CHANNEL, f"**__{me.mention} Iꜱ Rᴇsᴛᴀʀᴛᴇᴅ !!**\n\n📅 Dᴀᴛᴇ : `{date}`\n⏰ Tɪᴍᴇ : `{time}`\n🌐 Tɪᴍᴇᴢᴏɴᴇ : `Africa/Lome`\n\n🉐 Vᴇʀsɪᴏɴ : `v{__version__} (Layer {layer})`</b>")                                
+                await self.send_message(Config.LOG_CHANNEL, f"<b><i>{me.mention} Iꜱ Rᴇsᴛᴀʀᴛᴇᴅ !!</i></b>\n\n📅 Dᴀᴛᴇ : <code>{date}</code>\n⏰ Tɪᴍᴇ : <code>{time}</code>\n🌐 Tɪᴍᴇᴢᴏɴᴇ : <code>Africa/Lome</code>\n\n🉐 Vᴇʀsɪᴏɴ : <code>v{__version__} (Layer {layer})</code>")                                
             except:
                 print("Pʟᴇᴀꜱᴇ Mᴀᴋᴇ Tʜɪꜱ Iꜱ Aᴅᴍɪɴ Iɴ Yᴏᴜʀ Lᴏɢ Cʜᴀɴɴᴇʟ")
 
     async def stop(self, *args):
         for id in Config.ADMIN:
-            try: await self.send_message(id, f"**Bot Stopped....**")                                
+            try: await self.send_message(id, f"<b>Bot Stopped....</b>")                                
             except: pass
         print("Bot Stopped 🙄")
         await super().stop()

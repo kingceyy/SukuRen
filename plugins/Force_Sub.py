@@ -30,7 +30,7 @@ async def handle_banned_user_status(bot, message):
         if (datetime.date.today() - datetime.date.fromisoformat(ban_status["banned_on"])).days > ban_status["ban_duration"]:
             await zeexdev.remove_ban(user_id)
         else:
-            return await message.reply_text("Désolé, vous êtes banni ! Veuillez contacter @ZeeXDevBot") 
+            return await message.reply_text("Désolé, vous êtes banni ! Veuillez contacter @kingcey") 
     await message.continue_propagation()
     
 @Client.on_message(filters.private)
@@ -41,10 +41,10 @@ async def _(bot, message):
 async def forces_sub(client, message):
     await client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     buttons = [
-        [InlineKeyboardButton(text="📢 Rejoindre le canal 📢", url=f"https://t.me/Godanimes")],
+        [InlineKeyboardButton(text="📢 Rejoindre le canal 📢", url=f"https://t.me/cineflixi")],
         [InlineKeyboardButton(text="🔄 Rejoins le 2eme", url=f"https://t.me/{Config.FORCE_SUB}")]
     ]
-    text = "**Vous n'êtes pas membre de notre canal. Veuillez rejoindre notre canal de mise à jour pour continuer.**"
+    text = "<b>Vous n'êtes pas membre de notre canal. Veuillez rejoindre notre canal de mise à jour pour continuer.</b>"
     try:
         user = await client.get_chat_member(Config.FORCE_SUB, message.from_user.id)    
         if user.status == enums.ChatMemberStatus.BANNED:                                   

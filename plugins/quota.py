@@ -84,7 +84,7 @@ async def quota_admin(client, message):
 
     if action == "info":
         if len(args) != 3:
-            return await message.reply_text("Utilisation : `/quota info user_id`")
+            return await message.reply_text("Utilisation : <code>/quota info user_id</code>")
         try:
             target_id = int(args[2])
         except ValueError:

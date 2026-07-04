@@ -84,7 +84,7 @@ async def send_log(b, u):
         time_ = curr.strftime('%I:%M:%S %p')
         await b.send_message(
             Config.LOG_CHANNEL,
-            f"**--Nᴏᴜᴠᴇᴀᴜ Vᴀɪssᴇᴀᴜ--**\n\nUtilisateur: {u.mention}\nId: `{u.id}`\nUn: @{u.username}\n\nDate: {date}\nHeure: {time_}\n\nPar: {b.mention}"
+            f"<b>--Nᴏᴜᴠᴇᴀᴜ Vᴀɪssᴇᴀᴜ--</b>\n\nUtilisateur: {u.mention}\nId: <code>{u.id}</code>\nUn: @{u.username}\n\nDate: {date}\nHeure: {time_}\n\nPar: {b.mention}"
         )
 
 async def get_seconds(time_string):

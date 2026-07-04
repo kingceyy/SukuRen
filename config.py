@@ -15,15 +15,15 @@ class Config(object):
     DB_URL = os.environ.get("DB_URL","mongodb+srv://Ethan:Ethan123@telegrambots.lva9j.mongodb.net/?retryWrites=true&w=majority&appName=TELEGRAMBOTS")
  
     # Autres configurations
-    RKN_PIC = os.environ.get("RKN_PIC", "https://i.ibb.co/dsX1bNTN/x.jpg")
-    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '8467461906').split()]
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1003340962000"))
+    RKN_PIC = os.environ.get("RKN_PIC", "https://www.imghippo.com/i/xDs7558uYw.jpg")
+    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '8140299716').split()]
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002698474966"))
 
     # Abonnement forcé
     try:
-        FORCE_SUB = int(os.environ.get("FORCE_SUB", "itz_kingcey")) 
+        FORCE_SUB = int(os.environ.get("FORCE_SUB", "cineflixi")) 
     except:
-        FORCE_SUB = os.environ.get("FORCE_SUB", "cineflixi")
+        FORCE_SUB = os.environ.get("FORCE_SUB", "itz_kingcey")
         
     # Configuration réponse web     
     PORT = int(os.environ.get("PORT", "8080"))
@@ -40,7 +40,7 @@ class Config(object):
     # ===================== MINI APP / PUBLICITÉS =====================
     WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://sukurenam.vercel.app")
     ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "https://sukurenam.vercel.app")
-    ADSGRAM_BLOCK_ID = os.environ.get("ADSGRAM_BLOCK_ID", "REMPLACE_PAR_TON_BLOCK_ID_ADSGRAM")
+    ADSGRAM_BLOCK_ID = os.environ.get("ADSGRAM_BLOCK_ID", "37226")
     MONETAG_ZONE_ID = os.environ.get("MONETAG_ZONE_ID", "REMPLACE_PAR_TA_ZONE_MONETAG")
 
     # Taille max en upload local (limite technique liée à l'API Bot Telegram, pas au quota)
@@ -59,7 +59,7 @@ Je suis SukunaRenamer, le Roi des Malédictions du renommage de fichiers sur Tel
 
 Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malédiction opérer.
 
-<blockquote>⛩️ Domaine : @itz_kingcey</blockquote></b>"""
+<blockquote>⛩️ Domaine : @Kingcey</blockquote></b>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├👹 Nom : {}
@@ -86,7 +86,7 @@ Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malé
 
 ⚡ Plus de quotas ? Regarde une pub, je t'en offre 15 de plus.
 
-ℹ️ Aide : <a href=https://t.me/+u5qxRjapSF05YTBk>Groupe de support</a>
+ℹ️ Aide : <a href=https://t.me/DigitalBotz_Support>Groupe de support</a>
 """
 
     UPGRADE = """
@@ -115,32 +115,32 @@ Contacte l'administrateur pour négocier ton tribut de quotas, ou regarde une pu
 <b>•></b> /see_caption — Lire ta légende
 <b>•></b> /del_caption — Effacer ta légende
 
-Exemple : `/set_caption 📕 Nom : {filename}
+Exemple : <code>/set_caption 📕 Nom : {filename}
 💾 Taille : {filesize}
-⏰ Durée : {duration}`
+⏰ Durée : {duration}</code>
 """
     
     BOT_STATUS = """
 👹 État du Domaine 👹
 
-⌚️ Éveillé depuis : `{}`
-👭 Vaisseaux enregistrés : `{}`
-💸 Vaisseaux premium : `{}`
-֍ Malédictions envoyées : `{}`
-⊙ Malédictions reçues : `{}`
+⌚️ Éveillé depuis : <code>{}</code>
+👭 Vaisseaux enregistrés : <code>{}</code>
+💸 Vaisseaux premium : <code>{}</code>
+֍ Malédictions envoyées : <code>{}</code>
+⊙ Malédictions reçues : <code>{}</code>
 """
     
     LIVE_STATUS = """
 ⚡ Pouls du Domaine ⚡
 
-Éveillé depuis : `{}`
-Énergie maudite (CPU) : `{}%`
-Réserve (RAM) : `{}%` 
-Espace total : `{}`
-Espace utilisé : `{} {}%`
-Espace libre : `{}`
-Upload : `{}`
-Download : `{}`
+Éveillé depuis : <code>{}</code>
+Énergie maudite (CPU) : <code>{}%</code>
+Réserve (RAM) : <code>{}%</code> 
+Espace total : <code>{}</code>
+Espace utilisé : <code>{} {}%</code>
+Espace libre : <code>{}</code>
+Upload : <code>{}</code>
+Download : <code>{}</code>
 V𝟷.𝟶 「STABLE」
 """
     
@@ -148,6 +148,17 @@ V𝟷.𝟶 「STABLE」
 ❪ Métadonnées maudites ❫
 
 - /metadata — Définir/modifier tes métadonnées
+
+Exemple :
+<code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code>
+
+📥 Aide : @Kingcey
+"""
+
+    SEND_METADATA = """
+❪ Métadonnées personnalisées ❫
+
+Envoie ta propre commande de métadonnées ffmpeg.
 
 Exemple :
 <code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code>
@@ -167,8 +178,8 @@ Tu peux ajouter un préfixe et un suffixe à tes fichiers
 ➢ /see_suffix — Voir ton suffixe
 ➢ /del_suffix — Supprimer ton suffixe
 
-Exemple : `/set_suffix @Kingcey`
-Exemple : `/set_prefix @Kingcey`
+Exemple : <code>/set_suffix @Kingcey</code>
+Exemple : <code>/set_prefix @Kingcey</code>
 """
     
     DEV_TXT = """<b><u>⛩️⛩️⛩️ MESSAGE DU ROI DES MALÉDICTIONS ⛩️⛩️⛩️</u>
@@ -177,7 +188,7 @@ Rejoins mon domaine pour suivre les mises à jour, les nouveautés et parler ave
 
 <a href='t.me/ZeeXClub'>Entrer dans le domaine</a>
 
-Pour tout problème, contacte : <a href='t.me/kingcey'>◡‌⃝ㅤ👹 Kιηg¢єу</a></b>"""
+Pour tout problème, contacte : <a href='t.me/ZeeXDevBot'>◡‌⃝ㅤ👹 Kιηg¢єу</a></b>"""
 
     RKN_PROGRESS = """<b>\n
 ╭━━━━❰RITUEL EN COURS...❱━➣

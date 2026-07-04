@@ -69,20 +69,20 @@ async def myplan(client, message):
         time_left_str = expiry_str_in_ist - datetime.datetime.now()
         await message.reply_text(
             f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\n"
-            f"Plan :- `{type}`\n\n"
-            f"🩸 Quotas gratuits :- `{balance['free']}`\n"
-            f"👑 Quotas premium :- `{balance['premium']}`\n"
-            f"⚡ Total :- `{balance['total']}`\n\n"
+            f"Plan :- <code>{type}</code>\n\n"
+            f"🩸 Quotas gratuits :- <code>{balance['free']}</code>\n"
+            f"👑 Quotas premium :- <code>{balance['premium']}</code>\n"
+            f"⚡ Total :- <code>{balance['total']}</code>\n\n"
             f"⏰ Temps restant premium : {time_left_str}\n⌛️ Date d'expiration : {expiry_str_in_ist}",
             quote=True
         )
     else:
         await message.reply_text(
             f"👤 utilisateur :- {user}\n⚡ ID utilisateur :- <code>{user_id}</code>\n"
-            f"Plan :- `{type}`\n\n"
-            f"🩸 Quotas gratuits :- `{balance['free']}`\n"
-            f"👑 Quotas premium :- `{balance['premium']}`\n"
-            f"⚡ Total :- `{balance['total']}`\n\n"
+            f"Plan :- <code>{type}</code>\n\n"
+            f"🩸 Quotas gratuits :- <code>{balance['free']}</code>\n"
+            f"👑 Quotas premium :- <code>{balance['premium']}</code>\n"
+            f"⚡ Total :- <code>{balance['total']}</code>\n\n"
             f"Si tu veux plus de quotas, regarde une pub ou passe premium 👇",
             reply_markup=InlineKeyboardMarkup([[
                 InlineKeyboardButton("⚡ Obtenir des quotas", web_app=WebAppInfo(url=Config.WEBAPP_URL))
@@ -166,9 +166,9 @@ async def cb_handler(client, query: CallbackQuery):
         free_trial_status = await zeexdev.get_free_trial_status(query.from_user.id)
         if not free_trial_status:            
             await zeexdev.give_free_trail(query.from_user.id)
-            new_text = "**👹 Ton essai premium a été activé pour 12 heures, et 50 quotas premium t'ont été offerts.**"
+            new_text = "<b>👹 Ton essai premium a été activé pour 12 heures, et 50 quotas premium t'ont été offerts.</b>"
         else:
-            new_text = "**🤣 Tu as déjà utilisé ton essai gratuit. Passe premium ici 👉 /plans**"
+            new_text = "<b>🤣 Tu as déjà utilisé ton essai gratuit. Passe premium ici 👉 /plans</b>"
         await client.send_message(query.from_user.id, text=new_text)
 
     elif data == "thumbnail":

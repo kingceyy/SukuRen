@@ -8,8 +8,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
-<!-- Monetag : colle ici EXACTEMENT le script fourni dans ton dashboard pour ta zone -->
-<script src='//libtl.com/sdk.js' data-zone='REPLACE_MONETAG_ZONE_ID' data-sdk='show_REPLACE_MONETAG_ZONE_ID'></script>
+<!-- Le script Monetag est injecté dynamiquement par assets/config.js à partir de MONETAG_ZONE_ID -->
 
 <!-- AdsGram -->
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -148,6 +147,18 @@ function startCooldown(seconds) {
   }, 1000);
 }
 
+function loadMonetagSdk(zoneId) {
+  return new Promise(function (resolve, reject) {
+    const s = document.createElement("script");
+    s.src = "//libtl.com/sdk.js";
+    s.setAttribute("data-zone", zoneId);
+    s.setAttribute("data-sdk", "show_" + zoneId);
+    s.onload = resolve;
+    s.onerror = function () { reject(new Error("Échec de chargement du SDK Monetag")); };
+    document.head.appendChild(s);
+  });
+}
+
 async function loadSession() {
   setStatus("Chargement de ton profil…");
   try {
@@ -177,17 +188,19 @@ async function loadSession() {
   }
 }
 
-function showMonetagInterstitial() {
-  return new Promise(function (resolve) {
+// Monetag Rewarded Interstitial : la promesse ne se résout que si la pub a bien été
+// regardée jusqu'au bout. On la traite donc comme une étape obligatoire, au même
+// titre que la rewarded video AdsGram — pas de crédit si l'une des deux échoue.
+function showMonetagRewarded() {
+  return new Promise(function (resolve, reject) {
     try {
-      const fn = window["show_REPLACE_MONETAG_ZONE_ID"];
-      if (typeof fn === "function") {
-        fn().then(resolve).catch(resolve);
-      } else {
-        resolve();
+      const fn = window["show_" + MONETAG_ZONE_ID];
+      if (typeof fn !== "function") {
+        return reject(new Error("Monetag indisponible"));
       }
+      fn().then(resolve).catch(reject);
     } catch (e) {
-      resolve();
+      reject(e);
     }
   });
 }
@@ -223,11 +236,11 @@ els.watchBtn.addEventListener("click", async function () {
   els.watchBtn.disabled = true;
   try {
     setSteps(0);
-    setStatus("Chargement de la publicité…");
-    await showMonetagInterstitial();
+    setStatus("Publicité 1/2 en cours…");
+    await showMonetagRewarded();
 
     setSteps(1, 0);
-    setStatus("Regarde la vidéo jusqu'au bout…");
+    setStatus("Publicité 2/2 en cours…");
     await showAdsgramRewarded();
 
     setSteps(2, 1);
@@ -243,7 +256,7 @@ els.watchBtn.addEventListener("click", async function () {
   } catch (e) {
     const msg = (e && e.error === "cooldown")
       ? "Attends un peu avant la prochaine pub."
-      : "La pub n'a pas été complétée. Réessaie.";
+      : "La pub n'a pas été complétée jusqu'au bout. Réessaie.";
     setStatus(msg, "err");
     els.watchBtn.disabled = false;
     setSteps(-1);
@@ -254,7 +267,13 @@ els.closeBtn.addEventListener("click", function () {
   if (tg) tg.close();
 });
 
-loadSession();
+els.watchBtn.disabled = true;
+setStatus("Chargement des publicités…");
+loadMonetagSdk(MONETAG_ZONE_ID)
+  .then(function () { return loadSession(); })
+  .catch(function () {
+    setStatus("Impossible de charger la régie publicitaire. Réessaie plus tard.", "err");
+  });
 </script>
 </body>
 </html>
