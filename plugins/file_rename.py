@@ -13,10 +13,15 @@ from helper.database import zeexdev
 from config import Config, rkn
 
 from asyncio import sleep
-import os, time, asyncio, re
+import os, time, asyncio
 
 UPLOAD_TEXT = """Téléversement en cours..."""
 DOWNLOAD_TEXT = """Téléchargement en cours..."""
+
+# Nom du fichier choisi par l'utilisateur, en attente du choix du type de sortie
+# (document/vidéo/audio). Indexé par l'ID du message qui porte les boutons de choix.
+# Nécessaire car message.text ne contient jamais les balises de formatage (voir doc() plus bas).
+pending_renames = {}
 
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
@@ -94,12 +99,16 @@ async def refunc(client, message):
             button.append([InlineKeyboardButton("🎥 Vidéo", callback_data="upload_video")])
         elif file.media == MessageMediaType.AUDIO:
             button.append([InlineKeyboardButton("🎵 Audio", callback_data="upload_audio")])
-            
-        await message.reply(
+
+        sent = await message.reply(
             text=f"<b>Sélectionnez le type de fichier de sortie</b>\n<b>• Nom du fichier :</b> <code>{new_name}</code>",
             reply_to_message_id=file.id,
             reply_markup=InlineKeyboardMarkup(button)
         )
+        # Telegram ne renvoie jamais les balises de formatage dans message.text (elles sont
+        # stockées à part en "entities"), donc on ne peut pas relire le nom depuis le texte.
+        # On le garde en mémoire, indexé par l'ID du message qui porte les boutons.
+        pending_renames[sent.id] = new_name
 
 @Client.on_callback_query(filters.regex("upload"))
 async def doc(bot, update):
@@ -116,15 +125,12 @@ async def doc(bot, update):
         os.mkdir("Metadata")
 
     user_id = update.message.chat.id
-    new_name = update.message.text
 
-    # Le nom est toujours encadré par <code>...</code> dans le message envoyé par refunc() :
-    # "<b>• Nom du fichier :</b> <code>nom.ext</code>". On extrait ce contenu par regex
-    # plutôt que de dépendre d'un séparateur texte fragile.
-    backtick_match = re.search(r"<code>(.+?)</code>", new_name)
-    if not backtick_match:
+    # Le nom a été mis de côté par refunc() au moment de l'envoi du message à boutons,
+    # indexé par l'ID de ce même message (voir pending_renames plus haut dans ce fichier).
+    new_filename_ = pending_renames.pop(update.message.id, None)
+    if not new_filename_:
         return await rkn_processing.edit("⚠️ Impossible de retrouver le nom de fichier. Recommence l'opération.")
-    new_filename_ = backtick_match.group(1)
 
     # Vérification de sécurité : le quota peut avoir été consommé entre-temps (autre fichier en parallèle)
     balance = await zeexdev.get_quota_balance(user_id)
