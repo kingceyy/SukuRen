@@ -34,8 +34,8 @@ upgrade_trial_button = InlineKeyboardMarkup([[
 ]])
 
 start_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('Mises à jour', url='https://t.me/ZeeXDev'),
-        InlineKeyboardButton('Support', url='https://t.me/BTZF_CHAT')
+        InlineKeyboardButton('Mises à jour', url='https://t.me/itz_kingcey'),
+        InlineKeyboardButton('Support', url='https://t.me/+u5qxRjapSF05YTBk')
         ],[
         InlineKeyboardButton('À propos', callback_data='about'),
         InlineKeyboardButton('Aide', callback_data='help')
@@ -140,7 +140,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=rkn.ABOUT_TXT.format(client.mention, __developer__, __programer__, __library__, __language__, __database__, _bot_version_),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("ZeeXClub", callback_data="source_code"),
+                InlineKeyboardButton("CineFlixi", callback_data="source_code"),
                 InlineKeyboardButton("état du bot", callback_data="bot_status")
                 ],[
                 InlineKeyboardButton("statut en direct", callback_data="live_status"),
@@ -240,7 +240,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=rkn.DEV_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("💞 Rejoindre 💞", url="https://t.me/ZeeXClub")
+                InlineKeyboardButton("💞 Rejoindre 💞", url="https://t.me/CineFlixi")
             ],[
                 InlineKeyboardButton("🔒 Fermer", callback_data="close"),
                 InlineKeyboardButton("◀️ Retour", callback_data="start")

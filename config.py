@@ -40,7 +40,7 @@ class Config(object):
     # ===================== MINI APP / PUBLICITÉS =====================
     WEBAPP_URL = os.environ.get("WEBAPP_URL", "https://sukurenam.vercel.app")
     ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "https://sukurenam.vercel.app")
-    ADSGRAM_BLOCK_ID = os.environ.get("ADSGRAM_BLOCK_ID", "37226")
+    ADSGRAM_BLOCK_ID = os.environ.get("ADSGRAM_BLOCK_ID", "37235")
     MONETAG_ZONE_ID = os.environ.get("MONETAG_ZONE_ID", "REMPLACE_PAR_TA_ZONE_MONETAG")
 
     # Taille max en upload local (limite technique liée à l'API Bot Telegram, pas au quota)
@@ -63,11 +63,11 @@ Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malé
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├👹 Nom : {}
-├⛩️ Domaine Malveillant : <a href="https://t.me/itz_kingcey">It'z Kingcey</a>
+├⛩️ Domaine : <a href="https://t.me/itz_kingcey">It'z Kingcey</a>
 ├👑 Roi des malédictions : <a href="https://t.me/+u5qxRjapSF05YTBk">Chat</a>
-├📕 Technique innée : {}
-├✏️ Langage rituel : {}
-├💾 Sceau de stockage : {}
+├📕 Technique innée : Pyrogram
+├✏️ Langage rituel : Python
+├💾 Sceau de stockage : Mongo
 ├📊 Version : V1.0 「Ryoiki Tenkai」</b>     
 ╰───────────────⍟ """
 
