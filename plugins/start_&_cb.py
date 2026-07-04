@@ -16,7 +16,7 @@ from helper.utils import humanbytes
 from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__
 
 upgrade_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('👑 Négocier avec l\'admin', user_id=int(6705898491)),
+        InlineKeyboardButton('👑 Négocier avec l\'admin', url="https://t.me/Kingcey"),
          ],[
         InlineKeyboardButton("⚡ Obtenir des quotas gratuits", web_app=WebAppInfo(url=Config.WEBAPP_URL))
         ],[
@@ -24,7 +24,7 @@ upgrade_button = InlineKeyboardMarkup([[
 ]])
 
 upgrade_trial_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('👑 Négocier avec l\'admin', user_id=int(6705898491)),
+        InlineKeyboardButton('👑 Négocier avec l\'admin', url="https://t.me/Kingcey"),
          ],[
         InlineKeyboardButton("essai premium - 12 heures ✓", callback_data = "give_trial"),
         ],[
@@ -34,8 +34,8 @@ upgrade_trial_button = InlineKeyboardMarkup([[
 ]])
 
 start_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('Mises à jour', url='https://t.me/itz_kingcey'),
-        InlineKeyboardButton('Support', url='https://t.me/https://t.me/+u5qxRjapSF05YTBk')
+        InlineKeyboardButton('Mises à jour', url='https://t.me/ZeeXDev'),
+        InlineKeyboardButton('Support', url='https://t.me/BTZF_CHAT')
         ],[
         InlineKeyboardButton('À propos', callback_data='about'),
         InlineKeyboardButton('Aide', callback_data='help')

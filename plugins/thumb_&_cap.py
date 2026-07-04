@@ -1,9 +1,10 @@
 from pyrogram import Client, filters 
+from pyrogram.enums import ChatAction
 from helper.database import zeexdev
 
 @Client.on_message(filters.private & filters.command('set_caption'))
 async def add_caption(client, message):
-    await client.send_chat_action(message.chat.id, "typing")
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     if len(message.command) == 1:
        return await rkn.edit("""**__Indiquez la légende__\n
@@ -16,7 +17,7 @@ Exemple : `/set_caption {filename}\n
    
 @Client.on_message(filters.private & filters.command(['del_caption', 'delete_caption', 'delcaption']))
 async def delete_caption(client, message):
-    await client.send_chat_action(message.chat.id, "typing")
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     caption = await zeexdev.get_caption(message.from_user.id)  
     if not caption:
@@ -26,7 +27,7 @@ async def delete_caption(client, message):
                                        
 @Client.on_message(filters.private & filters.command(['see_caption', 'view_caption']))
 async def see_caption(client, message):
-    await client.send_chat_action(message.chat.id, "typing")
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     caption = await zeexdev.get_caption(message.from_user.id)  
     if caption:
@@ -36,7 +37,7 @@ async def see_caption(client, message):
 
 @Client.on_message(filters.private & filters.command(['view_thumb', 'viewthumb']))
 async def viewthumb(client, message):
-    await client.send_chat_action(message.chat.id, "upload_photo")
+    await client.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     thumb = await zeexdev.get_thumbnail(message.from_user.id)
     if thumb:
@@ -47,7 +48,7 @@ async def viewthumb(client, message):
         
 @Client.on_message(filters.private & filters.command(['del_thumb', 'delete_thumb', 'delthumb']))
 async def removethumb(client, message):
-    await client.send_chat_action(message.chat.id, "typing")
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     thumb = await zeexdev.get_thumbnail(message.from_user.id)
     if thumb:
@@ -59,7 +60,7 @@ async def removethumb(client, message):
 
 @Client.on_message(filters.private & filters.photo)
 async def addthumbs(client, message):
-    await client.send_chat_action(message.chat.id, "typing")
+    await client.send_chat_action(message.chat.id, ChatAction.TYPING)
     rkn = await message.reply_text("__**Veuillez patienter**__")
     await zeexdev.set_thumbnail(message.from_user.id, file_id=message.photo.file_id)                
     await rkn.edit("✅️ __**Miniature enregistrée**__")

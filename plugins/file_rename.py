@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from pyrogram.enums import MessageMediaType, ChatAction
+from pyrogram.enums import MessageMediaType, ChatAction, ParseMode
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, WebAppInfo
@@ -13,12 +13,12 @@ from helper.database import zeexdev
 from config import Config, rkn
 
 from asyncio import sleep
-import os, time, asyncio
+import os, time, asyncio, re
 
 UPLOAD_TEXT = """Téléversement en cours..."""
 DOWNLOAD_TEXT = """Téléchargement en cours..."""
 
-app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION)
+app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
 
 def _quota_low_markup():
@@ -117,7 +117,14 @@ async def doc(bot, update):
 
     user_id = update.message.chat.id
     new_name = update.message.text
-    new_filename_ = new_name.split(":-")[1]
+
+    # Le nom est toujours encadré par des backticks dans le message envoyé par refunc() :
+    # "**• Nom du fichier :** `nom.ext`". On extrait ce qu'il y a entre les backticks
+    # plutôt que de dépendre d'un séparateur texte fragile.
+    backtick_match = re.search(r"`([^`]+)`", new_name)
+    if not backtick_match:
+        return await rkn_processing.edit("⚠️ Impossible de retrouver le nom de fichier. Recommence l'opération.")
+    new_filename_ = backtick_match.group(1)
 
     # Vérification de sécurité : le quota peut avoir été consommé entre-temps (autre fichier en parallèle)
     balance = await zeexdev.get_quota_balance(user_id)

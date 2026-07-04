@@ -8,6 +8,7 @@ from pathlib import Path
 # pyrogram imports
 import pyrogram.utils
 from pyrogram import Client, __version__, errors
+from pyrogram.enums import ParseMode
 from pyrogram.raw.all import layer
 
 # bots imports
@@ -36,6 +37,7 @@ class DigitalRenameBot(Client):
             bot_token=Config.BOT_TOKEN,
             workers=200,
             plugins={"root": "plugins"},
+            parse_mode=ParseMode.HTML,
             sleep_threshold=15)
                 
          
