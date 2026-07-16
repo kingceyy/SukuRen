@@ -49,191 +49,155 @@ class Config(object):
 
 class rkn(object):
     # ===================== TEXTES — THÈME RYOMEN SUKUNA =====================
+    # Tags HTML utilisés partout : <b> emphase, <i> nuance, <code> valeurs/commandes,
+    # <blockquote> bloc mis en avant. Textes volontairement courts et scannables.
 
-    START_TXT = """<b>Ryomen Sukuna Fukuma Mizushi.
-20 doigts, une seule volonté : la puissance.
+    START_TXT = """<b>Ryomen Sukuna</b> — Roi des Malédictions du renommage.
 
-Salut, {} 👁️
+Envoie-moi un fichier, donne-lui un nom, je m'en charge en un instant.
 
-Je suis SukunaRenamer, le Roi des Malédictions du renommage de fichiers sur Telegram. Ce que les autres bots mettent une éternité à faire, je le fais en un claquement de doigts.
+<blockquote>Salut {0} 👁️ — prêt à renommer ?</blockquote>"""
 
-Envoie-moi n'importe quel fichier, donne-lui un nouveau nom, et regarde ma malédiction opérer.
+    ABOUT_TXT = """<b>SukunaRenamer</b>
+<i>Roi des malédictions du renommage de fichiers.</i>
 
-<blockquote>⛩️ Domaine : @Kingcey</blockquote></b>"""
+<blockquote>Bot : {0}
+Contact : <a href="https://t.me/itz_kingcey">It'z Kingcey</a>
+Version : <code>V1.0 「Ryoiki Tenkai」</code></blockquote>"""
 
-    ABOUT_TXT = """<b>╭───────────⍟
-├👹 Nom : {}
-├⛩️ Domaine : <a href="https://t.me/itz_kingcey">It'z Kingcey</a>
-├👑 Roi des malédictions : <a href="https://t.me/+u5qxRjapSF05YTBk">Chat</a>
-├📕 Technique innée : Pyrogram
-├✏️ Langage rituel : Python
-├💾 Sceau de stockage : Mongo
-├📊 Version : V1.0 「Ryoiki Tenkai」</b>     
-╰───────────────⍟ """
+    HELP_TXT = """<b>Grimoire de Sukuna</b>
 
-    HELP_TXT = """
-<b>👹 Grimoire de Sukuna</b>
+<b>/start</b> — Invoquer le bot
+<b>/mesquotas</b> — Voir tes quotas
+<b>/plans</b> — Devenir premium
 
-<b>•></b> /start — Invoquer le bot
-<b>•></b> /mesquotas — Voir tes quotas restants
-<b>•></b> /plans — Devenir un vaisseau premium
+<blockquote><i>Renommer un fichier :</i>
+1. Envoie ton fichier
+2. Donne le nouveau nom
+3. Choisis le format</blockquote>
 
-✏️ <b><u>Comment renommer un fichier</u></b>
-<b>•></b> Envoie-moi un fichier (1 quota = 1 fichier)
-<b>•></b> Donne-moi le nouveau nom
-<b>•></b> Choisis le format [document, vidéo, audio]
-<b>•></b> Je l'exécute. Aussi simple que ça.
+Plus de quotas ? Regarde une pub, +15 offerts.
 
-⚡ Plus de quotas ? Regarde une pub, je t'en offre 15 de plus.
+<a href="https://t.me/+u5qxRjapSF05YTBk">Groupe de support</a>"""
 
-ℹ️ Aide : <a href=https://t.me/+u5qxRjapSF05YTBk>Groupe de support</a>
-"""
+    UPGRADE = """<b>Passer premium</b>
 
-    UPGRADE = """
-👑 <b>Devenir un vaisseau premium de Sukuna</b>
+Les quotas premium n'expirent jamais, contrairement aux quotas gratuits qui se dissipent après {0}h.
 
-Les quotas premium n'expirent jamais et te suivent partout — même quand les malédictions gratuites se dissipent après {}h.
+<blockquote><b>Premium</b> : quotas à vie, accès prioritaire, fichiers jusqu'à 4 Go</blockquote>
 
-•⪼ 🩸 Réserve — quotas premium sans expiration, prix libre
-•⪼ 👁️ Statut Vaisseau — accès prioritaire + limite de fichiers relevée
+Contacte l'administrateur pour activer ton plan, ou regarde une pub pour des quotas gratuits immédiats."""
 
-Contacte l'administrateur pour négocier ton tribut de quotas, ou regarde une pub pour obtenir des quotas gratuits immédiatement.
-    """
-    
-    THUMBNAIL = """
-🌌 <b><u>Sceau visuel (miniature)</u></b>
+    THUMBNAIL = """<b>Miniature personnalisée</b>
 
-<b>•></b> Envoie une photo pour la définir comme miniature
-<b>•></b> /del_thumb — Briser le sceau
-<b>•></b> /view_thumb — Contempler ton sceau actuel
-"""
-    
-    CAPTION = """
-📑 <b><u>Incantation personnalisée (légende)</u></b>
+Envoie une photo pour la définir comme miniature.
 
-<b>•></b> /set_caption — Graver ta légende
-<b>•></b> /see_caption — Lire ta légende
-<b>•></b> /del_caption — Effacer ta légende
+<b>/del_thumb</b> — Supprimer
+<b>/view_thumb</b> — Voir la miniature actuelle"""
 
-Exemple : <code>/set_caption 📕 Nom : {filename}
-💾 Taille : {filesize}
-⏰ Durée : {duration}</code>
-"""
-    
-    BOT_STATUS = """
-👹 État du Domaine 👹
+    CAPTION = """<b>Légende personnalisée</b>
 
-⌚️ Éveillé depuis : <code>{}</code>
-👭 Vaisseaux enregistrés : <code>{}</code>
-💸 Vaisseaux premium : <code>{}</code>
-֍ Malédictions envoyées : <code>{}</code>
-⊙ Malédictions reçues : <code>{}</code>
-"""
-    
-    LIVE_STATUS = """
-⚡ Pouls du Domaine ⚡
+<b>/set_caption</b> — Définir
+<b>/see_caption</b> — Voir
+<b>/del_caption</b> — Supprimer
 
-Éveillé depuis : <code>{}</code>
-Énergie maudite (CPU) : <code>{}%</code>
-Réserve (RAM) : <code>{}%</code> 
+<blockquote><code>/set_caption Nom : {filename}
+Taille : {filesize}
+Durée : {duration}</code></blockquote>"""
+
+    BOT_STATUS = """<b>État du Domaine</b>
+
+<blockquote>Éveillé depuis : <code>{}</code>
+Vaisseaux enregistrés : <code>{}</code>
+Vaisseaux premium : <code>{}</code>
+Malédictions envoyées : <code>{}</code>
+Malédictions reçues : <code>{}</code></blockquote>"""
+
+    LIVE_STATUS = """<b>Pouls du Domaine</b>
+
+<blockquote>Éveillé depuis : <code>{}</code>
+CPU : <code>{}%</code>
+RAM : <code>{}%</code>
 Espace total : <code>{}</code>
-Espace utilisé : <code>{} {}%</code>
+Espace utilisé : <code>{} ({}%)</code>
 Espace libre : <code>{}</code>
 Upload : <code>{}</code>
-Download : <code>{}</code>
-V𝟷.𝟶 「STABLE」
-"""
-    
-    DIGITAL_METADATA = """
-❪ Métadonnées maudites ❫
+Download : <code>{}</code></blockquote>
 
-- /metadata — Définir/modifier tes métadonnées
+<i>V1.0 「STABLE」</i>"""
 
-Exemple :
-<code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code>
+    DIGITAL_METADATA = """<b>Métadonnées</b>
 
-📥 Aide : @Kingcey
-"""
+<b>/metadata</b> — Définir tes métadonnées
 
-    SEND_METADATA = """
-❪ Métadonnées personnalisées ❫
+<blockquote><code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code></blockquote>
 
-Envoie ta propre commande de métadonnées ffmpeg.
+Aide : @Kingcey"""
 
-Exemple :
-<code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code>
+    SEND_METADATA = """<b>Métadonnées personnalisées</b>
 
-📥 Aide : @Kingcey
-"""
-    
-    CUSTOM_FILE_NAME = """
-<u>🖋️ Nom de fichier maudit personnalisé</u>
+Envoie ta propre commande ffmpeg.
 
-Tu peux ajouter un préfixe et un suffixe à tes fichiers
+<blockquote><code>-map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kingcey" -metadata author="@Kingcey" -metadata:s:s title="Subtitled By :- @Kingcey" -metadata:s:a title="By :- @Kingcey" -metadata:s:v title="By:- @Kingcey"</code></blockquote>
 
-➢ /set_prefix — Ajouter un préfixe
-➢ /see_prefix — Voir ton préfixe
-➢ /del_prefix — Supprimer ton préfixe
-➢ /set_suffix — Ajouter un suffixe
-➢ /see_suffix — Voir ton suffixe
-➢ /del_suffix — Supprimer ton suffixe
+Aide : @Kingcey"""
 
-Exemple : <code>/set_suffix @Kingcey</code>
-Exemple : <code>/set_prefix @Kingcey</code>
-"""
-    
-    DEV_TXT = """<b><u>⛩️⛩️⛩️ MESSAGE DU ROI DES MALÉDICTIONS ⛩️⛩️⛩️</u>
+    CUSTOM_FILE_NAME = """<b>Préfixe / suffixe</b>
 
-Rejoins mon domaine pour suivre les mises à jour, les nouveautés et parler avec l'administrateur.
+<b>/set_prefix</b> — Ajouter · <b>/see_prefix</b> — Voir · <b>/del_prefix</b> — Supprimer
+<b>/set_suffix</b> — Ajouter · <b>/see_suffix</b> — Voir · <b>/del_suffix</b> — Supprimer
 
-<a href='t.me/ZeeXClub'>Entrer dans le domaine</a>
+<blockquote><code>/set_suffix @Kingcey</code></blockquote>"""
 
-Pour tout problème, contacte : <a href='t.me/ZeeXDevBot'>◡‌⃝ㅤ👹 Kιηg¢єу</a></b>"""
+    DEV_TXT = """<b>Rejoins le domaine</b>
 
-    RKN_PROGRESS = """<b>\n
-╭━━━━❰RITUEL EN COURS...❱━➣
-┣⪼ 🗃️ Taille: {1} | {2}
-┣⪼ ⏳️ Progression : {0}%
-┣⪼ 🚀 Vitesse: {3}/s
-┣⪼ ⏰️ Temps restant: {4}
-╰━━━━━━━━━━━━━━━➣ </b>"""
+Mises à jour, nouveautés, contact direct avec l'administrateur.
+
+<blockquote><a href="https://t.me/ZeeXClub">Entrer dans le domaine</a></blockquote>
+
+Un problème ? <a href="https://t.me/ZeeXDevBot">Contacter Kingcey</a>"""
+
+    RKN_PROGRESS = """<b>Rituel en cours…</b>
+<blockquote><code>{1} | {2}</code>
+Progression : <code>{0}%</code>
+Vitesse : <code>{3}/s</code>
+Temps restant : <code>{4}</code></blockquote>"""
 
     # ===================== TEXTES QUOTAS =====================
 
-    QUOTA_LOW_TXT = """<b>👹 Tes quotas sont épuisés.
+    QUOTA_LOW_TXT = """<b>Quotas épuisés</b>
 
-Sukuna n'agit pas gratuitement éternellement. Il te reste <code>{remain}</code> quota(s), mais renommer ce fichier en demande davantage.
+Il te reste <code>{remain}</code> quota(s), insuffisant pour ce fichier.
 
-⚡ Regarde une courte pub pour recevoir <b>{per_ad} quotas</b> instantanément (valables {expiry}h)
-👑 Ou passe premium pour des quotas qui n'expirent jamais</b>"""
+<blockquote>Regarde une pub → +<b>{per_ad}</b> quotas (valables {expiry}h)
+Ou passe premium → quotas à vie</blockquote>"""
 
-    QUOTA_INFO_TXT = """<b>👁️ Bilan de tes quotas, {user}
+    QUOTA_INFO_TXT = """<b>Quotas de {user}</b>
 
-🩸 Quotas gratuits (expirent) : <code>{free}</code>
-👑 Quotas premium (illimités dans le temps) : <code>{premium}</code>
-⚡ Total disponible : <code>{total}</code>
+<blockquote>Gratuits : <code>{free}</code>
+Premium : <code>{premium}</code>
+Total : <code>{total}</code></blockquote>
 
-{expiry_line}
+<i>{expiry_line}</i>
 
-1 quota = 1 fichier renommé.</b>"""
+1 quota = 1 fichier renommé."""
 
-    QUOTA_EARN_INTRO_TXT = """<b>⚡ Ouvre la Mini App ci-dessous pour regarder une pub et recevoir tes quotas.
+    QUOTA_EARN_INTRO_TXT = """<b>Regarde une pub</b>
 
-Chaque pub complète = +{per_ad} quotas, valables {expiry}h.</b>"""
+Ouvre la Mini App ci-dessous. Chaque pub complète = +<b>{per_ad}</b> quotas (valables {expiry}h)."""
 
-    QUOTA_REWARD_ADMIN_LOG = """<b>👹 Quota crédité
+    QUOTA_REWARD_ADMIN_LOG = """<b>Quota crédité</b>
 
-👤 Utilisateur : {mention}
-🆔 ID : <code>{user_id}</code>
-⚡ Quotas ajoutés : {amount}
-⏰ Expire dans : {expiry}h</b>"""
+<blockquote>Utilisateur : {mention}
+ID : <code>{user_id}</code>
+Ajouté : <code>{amount}</code>
+Expire dans : <code>{expiry}h</code></blockquote>"""
 
-    QUOTA_ADMIN_USAGE = """<b>👑 Commande admin /quota
+    QUOTA_ADMIN_USAGE = """<b>Commande /quota</b>
 
-Utilisation :
-<code>/quota add user_id montant</code> — ajoute des quotas premium (n'expirent jamais)
+<code>/quota add user_id montant</code> — ajoute des quotas premium
 <code>/quota remove user_id montant</code> — retire des quotas premium
 <code>/quota set user_id montant</code> — fixe le solde premium
 <code>/quota info user_id</code> — voir le solde d'un utilisateur
 
-Exemple : <code>/quota add 123456789 100</code></b>"""
+Exemple : <code>/quota add 123456789 100</code>"""

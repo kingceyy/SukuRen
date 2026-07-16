@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>SukunaRenamer — Quotas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="assets/style.css" />
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
@@ -14,6 +15,12 @@
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 </head>
 <body>
+
+<div class="embers" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
 <div class="wrap">
 
   <div class="seal" aria-hidden="true">
@@ -27,8 +34,8 @@
       <path d="M96 50 L84 47 L80 50 L84 53 Z" fill="url(#g1)"/>
       <defs>
         <linearGradient id="g1" x1="0" y1="0" x2="100" y2="100">
-          <stop offset="0" stop-color="#b3123a"/>
-          <stop offset="1" stop-color="#7c1fd1"/>
+          <stop offset="0" stop-color="#d61f4e"/>
+          <stop offset="1" stop-color="#9b2be0"/>
         </linearGradient>
       </defs>
     </svg>
@@ -36,7 +43,7 @@
 
   <div class="eyebrow">Ryomen Sukuna Fukuma Mizushi</div>
   <h1>SukunaRenamer</h1>
-  <div class="sub">Regarde une publicité, reçois des quotas instantanément.</div>
+  <div class="sub">Renomme tes fichiers Telegram en un instant.</div>
 
   <div class="topnav">
     <span></span>
@@ -47,10 +54,24 @@
   </div>
 
   <div class="card">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2H4v20h16V10l-6-8z"/><path d="M14 2v7h6"/></svg>
+    </div>
+    <h3>Comment ça marche</h3>
+    <p>
+      Envoie un fichier au bot pour le renommer instantanément avec préfixe, suffixe, métadonnées
+      et miniature personnalisée. Chaque renommage consomme 1 quota. À l'inscription tu reçois
+      un petit stock de quotas gratuits, et tu peux en obtenir davantage à tout moment en regardant
+      une publicité jusqu'au bout : elle te crédite <strong id="perAdInline">15</strong> quotas gratuits,
+      valables <span id="expiryInline">35</span>h.
+    </p>
+  </div>
+
+  <div class="card">
     <div class="balance-row">
       <div>
         <div class="balance-label">Total disponible</div>
-        <div class="balance-value" id="totalVal">—</div>
+        <div class="balance-value skeleton" id="totalVal">0000</div>
       </div>
       <div class="card-icon" style="width:48px;height:48px;margin:0;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
@@ -59,8 +80,8 @@
       </div>
     </div>
     <div class="balance-grid">
-      <div class="stat"><div class="n" id="freeVal">—</div><div class="l">Gratuits (expirent)</div></div>
-      <div class="stat"><div class="n" id="premiumVal">—</div><div class="l">Premium (à vie)</div></div>
+      <div class="stat"><div class="n skeleton" id="freeVal">000</div><div class="l">Gratuits (expirent)</div></div>
+      <div class="stat"><div class="n skeleton" id="premiumVal">000</div><div class="l">Premium (à vie)</div></div>
     </div>
   </div>
 
@@ -93,7 +114,9 @@ const els = {
   free: document.getElementById("freeVal"),
   premium: document.getElementById("premiumVal"),
   perAd: document.getElementById("perAdVal"),
+  perAdInline: document.getElementById("perAdInline"),
   expiryHours: document.getElementById("expiryHours"),
+  expiryInline: document.getElementById("expiryInline"),
   watchBtn: document.getElementById("watchBtn"),
   closeBtn: document.getElementById("closeBtn"),
   status: document.getElementById("statusText"),
@@ -133,6 +156,9 @@ function renderBalance(balance) {
   els.total.textContent = balance.total;
   els.free.textContent = balance.free;
   els.premium.textContent = balance.premium;
+  els.total.classList.remove("skeleton");
+  els.free.classList.remove("skeleton");
+  els.premium.classList.remove("skeleton");
 }
 
 function startCooldown(seconds) {
@@ -181,6 +207,8 @@ async function loadSession() {
     renderBalance(data.balance);
     els.perAd.textContent = data.quota_per_ad;
     els.expiryHours.textContent = data.quota_expiry_hours;
+    els.perAdInline.textContent = data.quota_per_ad;
+    els.expiryInline.textContent = data.quota_expiry_hours;
 
     if (data.cooldown_seconds_left > 0) {
       startCooldown(data.cooldown_seconds_left);

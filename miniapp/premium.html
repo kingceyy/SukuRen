@@ -4,11 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>SukunaRenamer — Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="assets/style.css" />
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 </head>
 <body>
+
+<div class="embers" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
 <div class="wrap">
 
   <div class="topnav">
@@ -64,9 +71,12 @@
     </div>
 
     <div class="plan premium">
-      <div class="plan-tag">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20l-1.5-9-4.5 4-4-7-4 7-4.5-4L2 18z"/></svg>
-        Premium
+      <div class="plan-tag-row">
+        <div class="plan-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20l-1.5-9-4.5 4-4-7-4 7-4.5-4L2 18z"/></svg>
+          Premium
+        </div>
+        <span class="badge violet">Le plus choisi</span>
       </div>
       <div class="lottie-box small" id="premiumLottie" style="margin-bottom:12px;"></div>
       <div class="plan-title">Roi des malédictions</div>
@@ -91,13 +101,95 @@
     </div>
   </div>
 
-  <div class="card" style="text-align:center; margin-top:16px;">
+  <div class="ward" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4 10-4 10-4-10z"/></svg>
+  </div>
+
+  <div class="card">
+    <div class="pay-title">Moyens de paiement</div>
+    <p class="pay-desc">Choisis un moyen de paiement puis contacte l'administrateur : le règlement et l'activation du plan premium se font manuellement avec lui.</p>
+    <div class="pay-grid" id="payGrid">
+
+      <div class="pay-chip" data-pay="Telegram Stars" style="--pay-color:#f5b400;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L12 16.9 6.4 20l1.4-6.2-4.8-4.3 6.4-.6L12 3z"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">Telegram Stars</div>
+          <div class="pay-sub">Paiement in-app</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="TON" style="--pay-color:#3390ec;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 9l10 13L22 9 12 2z"/><path d="M2 9h20"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">TON</div>
+          <div class="pay-sub">Crypto</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="USDT" style="--pay-color:#26a17b;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 9h8M12 9v6M9.5 13.5c0 1 1.1 1.5 2.5 1.5s2.5-.5 2.5-1.5-1.1-1.3-2.5-1.5-2.5-.6-2.5-1.5S10.6 9 12 9s2.5.5 2.5 1.5"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">USDT</div>
+          <div class="pay-sub">Crypto</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="DOG.TON" style="--pay-color:#c9862b;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="9" r="1.6"/><circle cx="12" cy="7.3" r="1.6"/><circle cx="15.5" cy="9" r="1.6"/><circle cx="17" cy="12.5" r="1.6"/><path d="M12 12c-3 0-5.5 2-5.5 4.5S9 20 12 20s5.5-1 5.5-3.5S15 12 12 12z"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">DOG.TON</div>
+          <div class="pay-sub">Crypto</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="Solana" style="--pay-color:#9945ff;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">Solana</div>
+          <div class="pay-sub">Crypto</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="Ethereum" style="--pay-color:#8296d9;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v13M12 2L5 13l7 4 7-4-7-11z"/><path d="M5 15l7 7 7-7"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">Ethereum</div>
+          <div class="pay-sub">Crypto</div>
+        </div>
+      </div>
+
+      <div class="pay-chip" data-pay="Mobile Money" style="--pay-color:#ff8a3d; grid-column: 1 / -1;">
+        <div class="pay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><circle cx="12" cy="17.5" r="1.6"/><path d="M9 6h6"/></svg>
+        </div>
+        <div>
+          <div class="pay-name">Mobile Money</div>
+          <div class="pay-sub">Orange, MTN, Wave, Moov…</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center;">
     <div class="card-icon" style="margin:0 auto 12px;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h3>Devenir un vaisseau premium</h3>
-    <p>Les quotas premium sont attribués directement par l'administrateur. Contacte-le pour négocier ton tribut de quotas.</p>
-    <a class="btn" href="https://t.me/Kingcey" target="_blank" rel="noopener" style="margin-top:14px; text-decoration:none;">
+    <p>Les paiements sont traités manuellement. Sélectionne un moyen de paiement ci-dessus, puis contacte l'administrateur pour recevoir les instructions et activer ton plan premium.</p>
+    <a class="btn" id="contactBtn" href="https://t.me/Kingcey" target="_blank" rel="noopener" style="margin-top:14px; text-decoration:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
       Contacter l'administrateur
     </a>
@@ -128,6 +220,29 @@ lottie.loadAnimation({
 
 const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
+
+const chips = document.querySelectorAll(".pay-chip");
+const contactBtn = document.getElementById("contactBtn");
+let selectedPay = null;
+
+function contactUrl(method) {
+  const base = "https://t.me/Kingcey";
+  const text = method
+    ? "Bonjour, je veux passer Premium sur SukunaRenamer. Moyen de paiement : " + method + "."
+    : "Bonjour, je veux passer Premium sur SukunaRenamer.";
+  return base + "?text=" + encodeURIComponent(text);
+}
+
+chips.forEach(function (chip) {
+  chip.addEventListener("click", function () {
+    chips.forEach(function (c) { c.classList.remove("selected"); });
+    chip.classList.add("selected");
+    selectedPay = chip.getAttribute("data-pay");
+    contactBtn.href = contactUrl(selectedPay);
+  });
+});
+
+contactBtn.href = contactUrl(null);
 </script>
 </body>
 </html>
