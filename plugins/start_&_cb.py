@@ -34,8 +34,8 @@ upgrade_trial_button = InlineKeyboardMarkup([[
 ]])
 
 start_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('Mises à jour', url='https://t.me/itz_kingcey'),
-        InlineKeyboardButton('Support', url='https://t.me/+u5qxRjapSF05YTBk')
+        InlineKeyboardButton('Mises à jour', url='https://t.me/ZeeXDev'),
+        InlineKeyboardButton('Support', url='https://t.me/BTZF_CHAT')
         ],[
         InlineKeyboardButton('À propos', callback_data='about'),
         InlineKeyboardButton('Aide', callback_data='help')
@@ -140,7 +140,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=rkn.ABOUT_TXT.format(client.mention, __developer__, __programer__, __library__, __language__, __database__, _bot_version_),
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("CineFlixi", callback_data="source_code"),
+                InlineKeyboardButton("ZeeXClub", callback_data="source_code"),
                 InlineKeyboardButton("état du bot", callback_data="bot_status")
                 ],[
                 InlineKeyboardButton("statut en direct", callback_data="live_status"),
@@ -240,7 +240,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=rkn.DEV_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("💞 Rejoindre 💞", url="https://t.me/CineFlixi")
+                InlineKeyboardButton("💞 Rejoindre 💞", url="https://t.me/ZeeXClub")
             ],[
                 InlineKeyboardButton("🔒 Fermer", callback_data="close"),
                 InlineKeyboardButton("◀️ Retour", callback_data="start")
@@ -254,3 +254,12 @@ async def cb_handler(client, query: CallbackQuery):
         except:
             await query.message.delete()
             await query.message.continue_propagation()
+
+    else:
+        # Ce handler n'a AUCUN filtre : il reçoit tous les callback_query du bot, y compris
+        # ceux destinés à d'autres plugins (ex : "upload_document"/"upload_video"/"upload_audio"
+        # dans file_rename.py, "mesquotas"/"get_quota" dans quota.py, "metadata_*" dans
+        # metadata.py). Sans ce else, une valeur non reconnue ici finissait ignorée en silence
+        # et n'atteignait jamais son vrai handler — c'est ce qui bloquait les boutons de sortie
+        # de fichier (document/vidéo/audio).
+        await query.continue_propagation()
